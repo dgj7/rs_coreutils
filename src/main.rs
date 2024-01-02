@@ -39,10 +39,14 @@ fn count(config: &Config) -> Vec<Counts> {
         println!("    --help     display this help and exit");
         println!("    --version  output version information and exit");
     } else if config.show_bytes || config.show_chars || config.show_lines || config.show_words || config.show_max_line {
-        // todo: stop using fake results here
-        for (index, file_name) in config.file_paths.iter().enumerate() {
-            let counts = Counts::new(10*(index+1), 11*(index+1), 13*(index+1), 14*(index+1), 15*(index+1), file_name.to_path_buf());
-            result.push(counts);
+        for (index, file_path) in config.file_paths.iter().enumerate() {
+            if config.show_bytes {
+                panic!("bytes: not yet implemented")
+            } else {
+                // todo: stop using fake results here
+                let counts = Counts::new(10 * (index + 1), 11 * (index + 1), 13 * (index + 1), 14 * (index + 1), 15 * (index + 1), file_path.to_path_buf());
+                result.push(counts);
+            }
         }
     } else {
         // actual wc program waits for input; ours will just throw an error and exit
