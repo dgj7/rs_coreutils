@@ -1,9 +1,11 @@
 #!/bin/bash
 
 FILES="data/states.txt
-data/poem1.txt"
+data/poem1.txt
+data/40k.txt"
 
 printf "================================================================================\n"
+printf "lines, words, bytes, chars, max\n"
 
 for f in $FILES
 do

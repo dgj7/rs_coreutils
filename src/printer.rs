@@ -7,10 +7,10 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub fn print_results(config: &Config, counts : Vec<Counts>) {
     for count in counts.iter() {
         let lines     = if config.show_lines     { format!("{:>width$}", count.lines,    width = count.lines.ilog10()    as usize + 2) } else { "".to_owned() };
-        let words     = if config.show_words     { format!("{:>width$}", count.words,    width = count.words.ilog10()    as usize + 3) } else { "".to_owned() };
+        let words     = if config.show_words     { format!("{:>width$}", count.words,    width = count.words.ilog10()    as usize + 2) } else { "".to_owned() };
         let bytes     = if config.show_bytes     { format!("{:>width$}", count.bytes,    width = count.bytes.ilog10()    as usize + 2) } else { "".to_owned() };
         let chars     = if config.show_chars     { format!("{:>width$}", count.chars,    width = count.chars.ilog10()    as usize + 2) } else { "".to_owned() };
-        let max_len   = if config.show_max_line  { format!("{:>width$}", count.max_line, width = count.max_line.ilog10() as usize + 3) } else { "".to_owned() };
+        let max_len   = if config.show_max_line  { format!("{:>width$}", count.max_line, width = count.max_line.ilog10() as usize + 2) } else { "".to_owned() };
 
         let file_name = if config.show_file_name { format!(" {}", path_to_string(&count.file_path)).trim_end().to_owned() } else { "".to_owned() };
 
