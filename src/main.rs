@@ -70,14 +70,14 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
             Ok(value) => value
         };
 
-        /* increment line count */
-        counts.lines = counts.lines + 1;
-
         /* increment max line */
         let line_len = line.len();
         if line_len > counts.max_line {
             counts.max_line = line_len;
         }
+
+        /* increment line count */
+        counts.lines = counts.lines + 1;
 
         /* loop over the characters in the line */
         let mut previous_was_whitespace = false;
@@ -95,5 +95,10 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
                 previous_was_whitespace = false;
             }
         }
+    }
+
+    /* the last line of the file, whatever it is, doesn't end in a newline */
+    if counts.lines > 0 {
+        counts.lines = counts.lines - 1;
     }
 }

@@ -2,7 +2,9 @@
 
 FILES="data/states.txt
 data/poem1.txt
-data/40k.txt"
+data/40k.txt
+data/empty.txt
+data/single-line-no-newline.txt"
 
 printf "================================================================================\n"
 printf "lines, words, bytes, chars, max\n"

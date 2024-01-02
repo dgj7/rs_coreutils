@@ -3,19 +3,28 @@ use crate::config::Config;
 use crate::counts::Counts;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
+const BASE_WIDTH: usize = 2;
 
 pub fn print_results(config: &Config, counts : Vec<Counts>) {
     for count in counts.iter() {
-        let lines     = if config.show_lines     { format!("{:>width$}", count.lines,    width = count.lines.ilog10()    as usize + 2) } else { "".to_owned() };
-        let words     = if config.show_words     { format!("{:>width$}", count.words,    width = count.words.ilog10()    as usize + 2) } else { "".to_owned() };
-        let bytes     = if config.show_bytes     { format!("{:>width$}", count.bytes,    width = count.bytes.ilog10()    as usize + 2) } else { "".to_owned() };
-        let chars     = if config.show_chars     { format!("{:>width$}", count.chars,    width = count.chars.ilog10()    as usize + 2) } else { "".to_owned() };
-        let max_len   = if config.show_max_line  { format!("{:>width$}", count.max_line, width = count.max_line.ilog10() as usize + 2) } else { "".to_owned() };
+        let lines     = if config.show_lines     { format!("{:>width$}", count.lines,    width = calc_width(count.lines)) }          else { "".to_owned() };
+        let words     = if config.show_words     { format!("{:>width$}", count.words,    width = calc_width(count.words)) }          else { "".to_owned() };
+        let bytes     = if config.show_bytes     { format!("{:>width$}", count.bytes,    width = calc_width(count.bytes as usize)) } else { "".to_owned() };
+        let chars     = if config.show_chars     { format!("{:>width$}", count.chars,    width = calc_width(count.chars)) }          else { "".to_owned() };
+        let max_len   = if config.show_max_line  { format!("{:>width$}", count.max_line, width = calc_width(count.max_line)) }       else { "".to_owned() };
 
         let file_name = if config.show_file_name { format!(" {}", path_to_string(&count.file_path)).trim_end().to_owned() } else { "".to_owned() };
 
         println!("{}{}{}{}{}{}", lines, words, bytes, chars, max_len, file_name);
     }
+}
+
+fn calc_width(count: usize) -> usize {
+    if count == 0 {
+        return BASE_WIDTH
+    }
+
+    return count.ilog10() as usize + BASE_WIDTH
 }
 
 pub fn path_to_string(path_buf: &PathBuf) -> String {
