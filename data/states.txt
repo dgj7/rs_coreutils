@@ -6,7 +6,7 @@ Arizona
 California
 Colorado
 Connecticut
-District 
+District
 of Columbia
 Delaware
 Florida
@@ -54,4 +54,3 @@ Washington
 Wisconsin
 West Virginia
 Wyoming
-

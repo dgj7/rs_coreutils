@@ -1,3 +1,5 @@
+use std::fs::File;
+use std::path::PathBuf;
 use crate::config::Config;
 use crate::counts::Counts;
 
@@ -39,14 +41,24 @@ fn count(config: &Config) -> Vec<Counts> {
         println!("    --help     display this help and exit");
         println!("    --version  output version information and exit");
     } else if config.show_bytes || config.show_chars || config.show_lines || config.show_words || config.show_max_line {
-        for (index, file_path) in config.file_paths.iter().enumerate() {
+        for file_path in config.file_paths.iter() {
+            let file = match File::open(file_path) {
+                Err(reason) => panic!("can't open {}: {}", path_to_string(file_path), reason),
+                Ok(file) => file,
+            };
+            let mut counts = Counts::new(0, 0, 0, 0, 0, file_path.to_path_buf());
+
             if config.show_bytes {
-                panic!("bytes: not yet implemented")
+                counts.bytes = file.metadata().unwrap().len() as usize;
             } else {
                 // todo: stop using fake results here
-                let counts = Counts::new(10 * (index + 1), 11 * (index + 1), 13 * (index + 1), 14 * (index + 1), 15 * (index + 1), file_path.to_path_buf());
-                result.push(counts);
+                counts.chars = 10;
+                counts.lines = 11;
+                counts.words = 12;
+                counts.max_line = 100;
             }
+
+            result.push(counts);
         }
     } else {
         // actual wc program waits for input; ours will just throw an error and exit
@@ -63,7 +75,11 @@ fn print(config: &Config, counts : Vec<Counts>) {
         let lines = if config.show_lines { format!(" {}", count.lines).trim_end().to_owned() } else { "".to_owned() };
         let words = if config.show_words { format!(" {}", count.words).trim_end().to_owned() } else { "".to_owned() };
         let maxln = if config.show_max_line { format!(" {}", count.max_line).trim_end().to_owned() } else { "".to_owned() };
-        let filen = if config.show_file_name { format!(" {}", count.file_path.clone().into_os_string().into_string().unwrap()).trim_end().to_owned() } else { "".to_owned() };
+        let filen = if config.show_file_name { format!(" {}", path_to_string(&count.file_path)).trim_end().to_owned() } else { "".to_owned() };
         println!("{}{}{}{}{}{}", bytes, chars, lines, words, maxln, filen);
     }
+}
+
+fn path_to_string(path_buf: &PathBuf) -> String {
+    path_buf.clone().into_os_string().into_string().unwrap()
 }
