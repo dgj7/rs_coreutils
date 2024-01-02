@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io;
-use std::io::BufRead;
+use std::io::{BufRead};
 use crate::config::Config;
 use crate::counts::Counts;
 use crate::printer::{path_to_string, print_help, print_results, print_version};
@@ -96,6 +96,8 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
             }
         }
     }
+
+    // todo: if the last character is a newline, add 1 to lines
 
     /* the last line of the file, whatever it is, doesn't end in a newline */
     if counts.lines > 0 {
