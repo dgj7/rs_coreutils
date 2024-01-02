@@ -1,47 +1,27 @@
 use std::fs::File;
 use std::io;
 use std::io::BufRead;
-use std::path::PathBuf;
 use crate::config::Config;
 use crate::counts::Counts;
+use crate::printer::{path_to_string, print_help, print_results, print_version};
 
 mod counts;
 mod config;
-
-const VERSION: &str = env!("CARGO_PKG_VERSION");
+mod printer;
 
 fn main() {
     let config = Config::new(std::env::args());
     let counts = count(&config);
-    print(&config, counts);
+    print_results(&config, counts);
 }
 
 fn count(config: &Config) -> Vec<Counts> {
     let mut result: Vec<Counts> = vec![];
 
     if config.show_version_exit {
-        println!("rwc {}", VERSION);
+        print_version();
     } else if config.show_help_exit {
-        println!("Usage: wc [OPTION]... [FILE]...");
-        println!("    or:  wc [OPTION]... --files0-from=F");
-        println!("Print newline, word, and byte counts for each FILE, and a total line if");
-        println!("more than one FILE is specified.  A word is a non-zero-length sequence of");
-        println!("characters delimited by white space.");
-        println!();
-        println!("    With no FILE, or when FILE is -, read standard input.");
-        println!();
-        println!("    The options below may be used to select which counts are printed, always in");
-        println!("the following order: newline, word, character, byte, maximum line length.");
-        println!("    -c, --bytes            print the byte counts");
-        println!("    -m, --chars            print the character counts");
-        println!("    -l, --lines            print the newline counts");
-        println!("    --files0-from=F    read input from the files specified by");
-        println!("NUL-terminated names in file F;");
-        println!("If F is - then read names from standard input");
-        println!("    -L, --max-line-length  print the maximum display width");
-        println!("    -w, --words            print the word counts");
-        println!("    --help     display this help and exit");
-        println!("    --version  output version information and exit");
+        print_help();
     } else if config.should_count_bytes() || config.should_count_contents() {
         perform_count_in_files(&config, &mut result);
     } else {
@@ -116,22 +96,4 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
             }
         }
     }
-}
-
-fn print(config: &Config, counts : Vec<Counts>) {
-    for count in counts.iter() {
-        let lines     = if config.show_lines     { format!("{:>width$}", count.lines,    width = count.lines.ilog10()    as usize + 2) } else { "".to_owned() };
-        let words     = if config.show_words     { format!("{:>width$}", count.words,    width = count.words.ilog10()    as usize + 3) } else { "".to_owned() };
-        let bytes     = if config.show_bytes     { format!("{:>width$}", count.bytes,    width = count.bytes.ilog10()    as usize + 2) } else { "".to_owned() };
-        let chars     = if config.show_chars     { format!("{:>width$}", count.chars,    width = count.chars.ilog10()    as usize + 2) } else { "".to_owned() };
-        let max_len   = if config.show_max_line  { format!("{:>width$}", count.max_line, width = count.max_line.ilog10() as usize + 3) } else { "".to_owned() };
-
-        let file_name = if config.show_file_name { format!(" {}", path_to_string(&count.file_path)).trim_end().to_owned() } else { "".to_owned() };
-
-        println!("{}{}{}{}{}{}", lines, words, bytes, chars, max_len, file_name);
-    }
-}
-
-fn path_to_string(path_buf: &PathBuf) -> String {
-    path_buf.clone().into_os_string().into_string().unwrap()
 }
