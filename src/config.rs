@@ -23,6 +23,7 @@ impl Config {
             show_lines: false,
             show_words: false,
             show_max_line: false,
+
             show_file_name: true,// always true
 
             show_help_exit: false,

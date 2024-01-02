@@ -4,35 +4,30 @@ use crate::counts::Counts;
 mod counts;
 mod config;
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
     let config = Config::new(std::env::args());
-    if help(&config) { return };
     let counts = count(&config);
     print(&config, counts);
-}
-
-fn help(config: &Config) -> bool {
-    if config.show_version_exit {
-        println!("version: todo");
-        return config.show_version_exit
-    }
-
-    if config.show_help_exit {
-        println!("help: todo");
-        return config.show_help_exit
-    }
-
-    println!("help or version not specified");
-    return false;
 }
 
 fn count(config: &Config) -> Vec<Counts> {
     let mut result: Vec<Counts> = vec![];
 
-    // todo: stop using fake results here
-    for (index, file_name) in config.file_paths.iter().enumerate() {
-        let counts = Counts::new(10*(index+1), 11*(index+1), 13*(index+1), 14*(index+1), 15*(index+1), file_name.to_path_buf());
-        result.push(counts);
+    if config.show_version_exit {
+        println!("wc {}", VERSION);
+    } else if config.show_help_exit {
+        println!("help: todo");
+    } else if config.show_bytes || config.show_chars || config.show_lines || config.show_words || config.show_max_line {
+        // todo: stop using fake results here
+        for (index, file_name) in config.file_paths.iter().enumerate() {
+            let counts = Counts::new(10*(index+1), 11*(index+1), 13*(index+1), 14*(index+1), 15*(index+1), file_name.to_path_buf());
+            result.push(counts);
+        }
+    } else {
+        // todo: is this the correct error message?  is there an error message at all?
+        panic!("no valid command line arguments provided");
     }
 
     return result
