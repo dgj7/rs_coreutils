@@ -5,9 +5,25 @@ mod counts;
 mod config;
 
 fn main() {
-    let config = Config::new_test();
+    let config = Config::new(std::env::args());
+    if help(&config) { return };
     let counts = count(&config);
     print(&config, counts);
+}
+
+fn help(config: &Config) -> bool {
+    if config.show_version_exit {
+        println!("version: todo");
+        return config.show_version_exit
+    }
+
+    if config.show_help_exit {
+        println!("help: todo");
+        return config.show_help_exit
+    }
+
+    println!("help or version not specified");
+    return false;
 }
 
 fn count(config: &Config) -> Vec<Counts> {
