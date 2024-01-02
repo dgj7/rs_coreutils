@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 pub struct Config {
     pub show_bytes: bool,
     pub show_chars: bool,
@@ -5,8 +7,7 @@ pub struct Config {
     pub show_words: bool,
     pub show_max_line: bool,
     pub show_file_name: bool,
-    // todo: this might need to be a vector of paths
-    pub file_path : String,
+    pub file_paths : Vec<PathBuf>,
 }
 
 impl Config {
@@ -19,7 +20,7 @@ impl Config {
             show_words: true,
             show_max_line: true,
             show_file_name: true,
-            file_path: "data/file1.txt".to_string()
+            file_paths: vec!(PathBuf::from("~/development/learning/rust/projects/rwc/data/file1.txt"), PathBuf::from("~/development/learning/rust/projects/rwc/data/file2.txt"), PathBuf::from("~/development/learning/rust/projects/rwc/data/file3.txt"))
         }
     }
 }

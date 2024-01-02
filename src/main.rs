@@ -1,5 +1,3 @@
-#[allow(dead_code)]
-
 use crate::config::Config;
 use crate::counts::Counts;
 
@@ -12,11 +10,12 @@ fn main() {
     print(&config, counts);
 }
 
-fn count(_config: &Config) -> Vec<Counts> {
+fn count(config: &Config) -> Vec<Counts> {
     let mut result: Vec<Counts> = vec![];
 
-    for n in 1 ..=3 {
-        let counts = Counts::new(10*n, 11*n, 12*n, 13*n, 14*n);
+    // todo: stop using fake results here
+    for (index, file_name) in config.file_paths.iter().enumerate() {
+        let counts = Counts::new(10*(index+1), 11*(index+1), 13*(index+1), 14*(index+1), 15*(index+1), file_name.to_path_buf());
         result.push(counts);
     }
 
@@ -30,7 +29,7 @@ fn print(config: &Config, counts : Vec<Counts>) {
         let lines = if config.show_lines { format!(" {}", count.lines).trim_end().to_owned() } else { "".to_owned() };
         let words = if config.show_words { format!(" {}", count.words).trim_end().to_owned() } else { "".to_owned() };
         let maxln = if config.show_max_line { format!(" {}", count.max_line).trim_end().to_owned() } else { "".to_owned() };
-        let filen = if config.show_file_name { format!(" {}", config.file_path).trim_end().to_owned() } else { "".to_owned() };
+        let filen = if config.show_file_name { format!(" {}", count.file_path.clone().into_os_string().into_string().unwrap()).trim_end().to_owned() } else { "".to_owned() };
         println!("{}{}{}{}{}{}", bytes, chars, lines, words, maxln, filen);
     }
 }

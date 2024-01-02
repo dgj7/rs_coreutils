@@ -1,13 +1,16 @@
+use std::path::PathBuf;
+
 pub struct Counts {
-    pub bytes: i64,
-    pub chars: i64,
-    pub lines: i64,
-    pub words: i64,
-    pub max_line: i64,
+    pub bytes: usize,
+    pub chars: usize,
+    pub lines: usize,
+    pub words: usize,
+    pub max_line: usize,
+    pub file_path: PathBuf
 }
 
 impl Counts {
-    pub(crate) fn new(input_bytes: i64, input_chars: i64, input_lines: i64, input_words: i64, input_max_line: i64) -> Counts {
-        Counts { bytes: input_bytes, chars: input_chars, lines: input_lines, words: input_words, max_line: input_max_line }
+    pub(crate) fn new(input_bytes: usize, input_chars: usize, input_lines: usize, input_words: usize, input_max_line: usize, input_file_path: PathBuf) -> Counts {
+        Counts { bytes: input_bytes, chars: input_chars, lines: input_lines, words: input_words, max_line: input_max_line, file_path: input_file_path }
     }
 }
