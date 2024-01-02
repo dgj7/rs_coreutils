@@ -12,10 +12,18 @@ pub struct Config {
     pub show_help_exit: bool,
     pub show_version_exit: bool,
 
-    pub file_paths : Vec<PathBuf>,
+    pub file_paths: Vec<PathBuf>,
 }
 
 impl Config {
+    pub fn should_count_bytes(&self) -> bool {
+        return self.show_bytes;
+    }
+
+    pub fn should_count_contents(&self) -> bool {
+        return self.show_chars || self.show_lines || self.show_words || self.show_max_line;
+    }
+
     pub fn new(args: Args) -> Config {
         let mut config = Config {
             show_bytes: false,
