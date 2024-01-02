@@ -49,7 +49,7 @@ fn count(config: &Config) -> Vec<Counts> {
             let mut counts = Counts::new(0, 0, 0, 0, 0, file_path.to_path_buf());
 
             if config.show_bytes {
-                counts.bytes = file.metadata().unwrap().len() as usize;
+                counts.bytes = file.metadata().unwrap().len();
             } else {
                 // todo: stop using fake results here
                 counts.chars = 10;
