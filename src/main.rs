@@ -43,38 +43,42 @@ fn count(config: &Config) -> Vec<Counts> {
         println!("    --help     display this help and exit");
         println!("    --version  output version information and exit");
     } else if config.should_count_bytes() || config.should_count_contents() {
-        for file_path in config.file_paths.iter() {
-            /* open the file; fail if unable to open */
-            let file = match File::open(file_path) {
-                Err(reason) => panic!("can't open {}: {}", path_to_string(file_path), reason),
-                Ok(file) => file,
-            };
-
-            /* create counts; initialize to zero */
-            let mut counts = Counts::new(0, 0, 0, 0, 0, file_path.to_path_buf());
-
-            /* count bytes, if configured */
-            if config.show_bytes {
-                /* byte counting can be less manual */
-                counts.bytes = match file.metadata() {
-                    Err(reason) => panic!("failed to count bytes of {}: {}", path_to_string(file_path), reason),
-                    Ok(metadata) => metadata.len()
-                };
-            }
-
-            /* count contents, if configured */
-            if config.should_count_contents() {
-                perform_count_in_file(&file, &mut counts);
-            }
-
-            result.push(counts);
-        }
+        perform_count_in_files(&config, &mut result);
     } else {
         // actual wc program waits for input; ours will just throw an error and exit
         panic!("no valid command line arguments provided");
     }
 
     return result
+}
+
+fn perform_count_in_files(config: &Config, result: &mut Vec<Counts>) {
+    for file_path in config.file_paths.iter() {
+        /* open the file; fail if unable to open */
+        let file = match File::open(file_path) {
+            Err(reason) => panic!("can't open {}: {}", path_to_string(file_path), reason),
+            Ok(file) => file,
+        };
+
+        /* create counts; initialize to zero */
+        let mut counts = Counts::new(0, 0, 0, 0, 0, file_path.to_path_buf());
+
+        /* count bytes, if configured */
+        if config.show_bytes {
+            /* byte counting can be less manual */
+            counts.bytes = match file.metadata() {
+                Err(reason) => panic!("failed to count bytes of {}: {}", path_to_string(file_path), reason),
+                Ok(metadata) => metadata.len()
+            };
+        }
+
+        /* count contents, if configured */
+        if config.should_count_contents() {
+            perform_count_in_file(&file, &mut counts);
+        }
+
+        result.push(counts);
+    }
 }
 
 fn perform_count_in_file(file: &File, counts: &mut Counts) {
@@ -116,12 +120,14 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
 
 fn print(config: &Config, counts : Vec<Counts>) {
     for count in counts.iter() {
-        let bytes = if config.show_bytes { format!(" {}", count.bytes).trim_end().to_owned() } else { "".to_owned() };
-        let chars = if config.show_chars { format!(" {}", count.chars).trim_end().to_owned() } else { "".to_owned() };
-        let lines = if config.show_lines { format!(" {}", count.lines).trim_end().to_owned() } else { "".to_owned() };
-        let words = if config.show_words { format!(" {}", count.words).trim_end().to_owned() } else { "".to_owned() };
-        let max_len = if config.show_max_line { format!(" {}", count.max_line).trim_end().to_owned() } else { "".to_owned() };
+        let lines     = if config.show_lines     { format!("{:>width$}", count.lines,    width = count.lines.ilog10()    as usize + 2) } else { "".to_owned() };
+        let words     = if config.show_words     { format!("{:>width$}", count.words,    width = count.words.ilog10()    as usize + 3) } else { "".to_owned() };
+        let bytes     = if config.show_bytes     { format!("{:>width$}", count.bytes,    width = count.bytes.ilog10()    as usize + 2) } else { "".to_owned() };
+        let chars     = if config.show_chars     { format!("{:>width$}", count.chars,    width = count.chars.ilog10()    as usize + 2) } else { "".to_owned() };
+        let max_len   = if config.show_max_line  { format!("{:>width$}", count.max_line, width = count.max_line.ilog10() as usize + 3) } else { "".to_owned() };
+
         let file_name = if config.show_file_name { format!(" {}", path_to_string(&count.file_path)).trim_end().to_owned() } else { "".to_owned() };
+
         println!("{}{}{}{}{}{}", lines, words, bytes, chars, max_len, file_name);
     }
 }
