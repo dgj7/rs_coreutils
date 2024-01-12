@@ -9,7 +9,7 @@ use string_builder::Builder;
 mod config;
 mod calc;
 
-const BLANK_ROW : &str = "                     ";
+const BLANK_ROW: &str = "                     ";
 
 fn main() {
     let args = std::env::args();
@@ -22,14 +22,16 @@ fn main() {
 fn format_months(config: AppConfig) -> Vec<String> {
     let mut results = vec![];
 
-    config.months.chunks(3).for_each(|three| {
-        format_chunk(three)
-            .iter()
-            .for_each(|result| {
-                let formatted = format!("{}", result);
-                results.push(formatted)
-            });
-    });
+    config.months
+        .chunks(3)
+        .for_each(|three| {
+            format_chunk(three)
+                .iter()
+                .for_each(|result| {
+                    let formatted = format!("{}", result);
+                    results.push(formatted)
+                });
+        });
     return results;
 }
 
@@ -89,7 +91,6 @@ fn format_month(config: &MonthConfig) -> Vec<String> {
             let mut line_builder = Builder::default();
             for _column_number in 0..7 {
                 line_builder.append(format!(" {:>2}", format_day(next_index, max)));
-                //print!(" {:>2}", next);
                 next_index = next_index + 1;
             }
             prev_row_max = next_index;
@@ -107,7 +108,7 @@ fn format_day(day: i32, max_days: i32) -> String {
         "  ".to_string()
     } else {
         format!("{:>2}", day)
-    }
+    };
 }
 
 fn extend(vector: &mut Vec<String>, target_len: usize) {
