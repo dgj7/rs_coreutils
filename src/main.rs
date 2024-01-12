@@ -14,11 +14,7 @@ const BLANK_ROW : &str = "                     ";
 fn main() {
     let args = std::env::args();
     let config = AppConfig::new(args);
-    let mut lines = format_months(config);
-
-    // todo: remove; also, `lines` doesnt need to be `mut` after these lines are removed
-    //format_month(&MonthConfig::new(2, 2024)).iter().for_each(|x| lines.push((**x).parse().unwrap()));
-    //format_month(&MonthConfig::new(6, 2024)).iter().for_each(|x| lines.push((**x).parse().unwrap()));
+    let lines = format_months(config);
 
     lines.iter().for_each(|line| println!("{}", line));
 }
@@ -58,6 +54,8 @@ fn format_chunk(slice: &[MonthConfig]) -> Vec<String> {
         } else {
             let mut third = format_month(&slice[2]);
             let largest = vec!(first.len(), second.len(), third.len()).iter().max().unwrap().to_owned();
+            extend(&mut first, largest);
+            extend(&mut second, largest);
             extend(&mut third, largest);
 
             for idx in 0..largest {
