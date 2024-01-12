@@ -9,21 +9,69 @@ use string_builder::Builder;
 mod config;
 mod calc;
 
+const BLANK_ROW : &str = "                     ";
+
 fn main() {
     let args = std::env::args();
     let config = AppConfig::new(args);
     let mut lines = format_months(config);
 
     // todo: remove; also, `lines` doesnt need to be `mut` after these lines are removed
-    format_month(&MonthConfig::new(2, 2024)).iter().for_each(|x| lines.push((**x).parse().unwrap()));
-    format_month(&MonthConfig::new(6, 2024)).iter().for_each(|x| lines.push((**x).parse().unwrap()));
+    //format_month(&MonthConfig::new(2, 2024)).iter().for_each(|x| lines.push((**x).parse().unwrap()));
+    //format_month(&MonthConfig::new(6, 2024)).iter().for_each(|x| lines.push((**x).parse().unwrap()));
 
     lines.iter().for_each(|line| println!("{}", line));
 }
 
-fn format_months(config: AppConfig) -> Vec<String> {
-    // todo: there will eventually be multiple months; merge them here
-    return format_month(&config.months[0]);
+fn format_months<'a>(config: AppConfig) -> Vec<String> {
+    let mut results = vec![];
+
+    config.months.chunks(3).for_each(|three| {
+        format_chunk(three)
+            .iter()
+            .for_each(|result| {
+                let formatted = format!("{}", result);
+                results.push(formatted)
+            });
+    });
+    return results;
+}
+
+fn format_chunk(slice: &[MonthConfig]) -> Vec<String> {
+    if slice.is_empty() {
+        panic!("don't know what to do with empty slice")
+    } else if slice.len() > 1 {
+        let mut results = vec![];
+        let mut first = format_month(&slice[0]);
+        let mut second = format_month(&slice[1]);
+
+        if slice.len() < 3 {
+            let largest = vec!(first.len(), second.len()).iter().max().unwrap().to_owned();
+            extend(&mut first, largest);
+            extend(&mut second, largest);
+
+            for idx in 0..largest {
+                let x = first[idx].to_owned();
+                let y = second[idx].to_owned();
+                results.push(format!("{} {}", x, y));
+            }
+        } else {
+            let mut third = format_month(&slice[2]);
+            let largest = vec!(first.len(), second.len(), third.len()).iter().max().unwrap().to_owned();
+            extend(&mut third, largest);
+
+            for idx in 0..largest {
+                let x = first[idx].to_owned();
+                let y = second[idx].to_owned();
+                let z = third[idx].to_owned();
+                results.push(format!("{} {} {}", x, y, z));
+            }
+        }
+
+        return results;
+    } else {
+        return format_month(&slice[0]);
+    }
 }
 
 fn format_month(config: &MonthConfig) -> Vec<String> {
@@ -37,7 +85,7 @@ fn format_month(config: &MonthConfig) -> Vec<String> {
     //println!("first_day={}, next_index={}, max={}", first_day, next_index, max);
 
     let mut lines = vec![];
-    lines.push("                     ".to_string());
+    lines.push(BLANK_ROW.to_string());
     lines.push(format!("{:^21}", month_name));
     lines.push(" Su Mo Tu We Th Fr Sa".to_string());
 
@@ -67,5 +115,11 @@ fn format_day(day: i32, max_days: i32) -> String {
         "  ".to_string()
     } else {
         format!("{:>2}", day)
+    }
+}
+
+fn extend(vector: &mut Vec<String>, target_len: usize) {
+    while vector.len() != target_len - 1 {
+        vector.push(BLANK_ROW.to_string());
     }
 }
