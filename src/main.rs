@@ -1,7 +1,7 @@
 extern crate string_builder;
 
 use std::string::ToString;
-use chrono::{Datelike, NaiveDate, TimeZone};
+use chrono::{Datelike, NaiveDate};
 use crate::calc::{calc_days_in_month, month_name};
 use crate::config::{AppConfig, MonthConfig};
 use string_builder::Builder;
@@ -42,10 +42,10 @@ fn format_month(config: &MonthConfig) -> Vec<String> {
     lines.push(" Su Mo Tu We Th Fr Sa".to_string());
 
     let mut prev_row_max: i32 = 0;
-    for line_number in 1..=7 {
+    for _line_number in 1..=7 {
         if prev_row_max <= max {
             let mut line_builder = Builder::default();
-            for column_number in 0..7 {
+            for _column_number in 0..7 {
                 line_builder.append(format!(" {:>2}", format_day(next_index, max)));
                 //print!(" {:>2}", next);
                 next_index = next_index + 1;
