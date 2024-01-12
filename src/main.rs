@@ -19,7 +19,7 @@ fn main() {
     lines.iter().for_each(|line| println!("{}", line));
 }
 
-fn format_months<'a>(config: AppConfig) -> Vec<String> {
+fn format_months(config: AppConfig) -> Vec<String> {
     let mut results = vec![];
 
     config.months.chunks(3).for_each(|three| {
@@ -73,14 +73,10 @@ fn format_chunk(slice: &[MonthConfig]) -> Vec<String> {
 }
 
 fn format_month(config: &MonthConfig) -> Vec<String> {
-    //println!("-----");
-    //println!("month={}, year={}", config.month, config.year);
-
     let first_day: i32 = (NaiveDate::from_ymd_opt(config.year as i32, config.month as u32, 1).unwrap().weekday().num_days_from_sunday() + 1) as i32;
     let mut next_index: i32 = 2 - first_day;
     let max: i32 = calc_days_in_month(config.month as u32, config.year as i32) as i32;
     let month_name = month_name(&config, false);
-    //println!("first_day={}, next_index={}, max={}", first_day, next_index, max);
 
     let mut lines = vec![];
     lines.push(BLANK_ROW.to_string());
@@ -97,11 +93,9 @@ fn format_month(config: &MonthConfig) -> Vec<String> {
                 next_index = next_index + 1;
             }
             prev_row_max = next_index;
-            //println!("{}", line_builder.string().unwrap());
             lines.push(line_builder.string().unwrap().clone());
         }
     }
-    //println!("-----");
 
     return lines;
 }
