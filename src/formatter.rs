@@ -106,7 +106,7 @@ fn format_day(day: i32, max_days: i32) -> String {
 }
 
 fn extend(vector: &mut Vec<String>, target_len: usize) {
-    while vector.len() != target_len - 1 {
+    while vector.len() != target_len {
         vector.push(BLANK_ROW.to_string());
     }
 }
@@ -135,7 +135,6 @@ mod test {
     }
 
     #[test]
-    #[ignore]
     fn test_2months() {
         let the_months = vec!(
             MonthConfig { month: 12, year: 2023 },
@@ -144,11 +143,19 @@ mod test {
         let config = AppConfig { months: the_months };
         let lines = format_months(config);
 
-        assert_eq!(0, lines.len());
+        assert_eq!(9, lines.len());
+        assert_eq!("                                                                 ", lines.get(0).unwrap());
+        assert_eq!("      December               January                             ", lines.get(1).unwrap());
+        assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa                      ", lines.get(2).unwrap());
+        assert_eq!("                 1  2      1  2  3  4  5  6                      ", lines.get(3).unwrap());
+        assert_eq!("  3  4  5  6  7  8  9   7  8  9 10 11 12 13                      ", lines.get(4).unwrap());
+        assert_eq!(" 10 11 12 13 14 15 16  14 15 16 17 18 19 20                      ", lines.get(5).unwrap());
+        assert_eq!(" 17 18 19 20 21 22 23  21 22 23 24 25 26 27                      ", lines.get(6).unwrap());
+        assert_eq!(" 24 25 26 27 28 29 30  28 29 30 31                               ", lines.get(7).unwrap());
+        assert_eq!(" 31                                                              ", lines.get(8).unwrap());
     }
 
     #[test]
-    #[ignore]
     fn test_5months_over2years() {
         let the_months = vec!(
             MonthConfig { month: 11, year: 2023 },
@@ -160,6 +167,25 @@ mod test {
         let config = AppConfig { months: the_months };
         let lines = format_months(config);
 
-        assert_eq!(0, lines.len());
+        // todo: year should be displayed somewhere here
+        assert_eq!(18, lines.len());
+        assert_eq!("                                                                 ", lines.get(0).unwrap());
+        assert_eq!("      November              December               January       ", lines.get(1).unwrap());
+        assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa", lines.get(2).unwrap());
+        assert_eq!("           1  2  3  4                  1  2      1  2  3  4  5  6", lines.get(3).unwrap());
+        assert_eq!("  5  6  7  8  9 10 11   3  4  5  6  7  8  9   7  8  9 10 11 12 13", lines.get(4).unwrap());
+        assert_eq!(" 12 13 14 15 16 17 18  10 11 12 13 14 15 16  14 15 16 17 18 19 20", lines.get(5).unwrap());
+        assert_eq!(" 19 20 21 22 23 24 25  17 18 19 20 21 22 23  21 22 23 24 25 26 27", lines.get(6).unwrap());
+        assert_eq!(" 26 27 28 29 30        24 25 26 27 28 29 30  28 29 30 31         ", lines.get(7).unwrap());
+        assert_eq!("                       31                                        ", lines.get(8).unwrap());
+        assert_eq!("                                                                 ", lines.get(9).unwrap());
+        assert_eq!("      February                March                              ", lines.get(10).unwrap());
+        assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa                      ", lines.get(11).unwrap());
+        assert_eq!("              1  2  3                  1  2                      ", lines.get(12).unwrap());
+        assert_eq!("  4  5  6  7  8  9 10   3  4  5  6  7  8  9                      ", lines.get(13).unwrap());
+        assert_eq!(" 11 12 13 14 15 16 17  10 11 12 13 14 15 16                      ", lines.get(14).unwrap());
+        assert_eq!(" 18 19 20 21 22 23 24  17 18 19 20 21 22 23                      ", lines.get(15).unwrap());
+        assert_eq!(" 25 26 27 28 29        24 25 26 27 28 29 30                      ", lines.get(16).unwrap());
+        assert_eq!("                       31                                        ", lines.get(17).unwrap());
     }
 }
