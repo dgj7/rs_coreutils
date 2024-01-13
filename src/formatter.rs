@@ -136,6 +136,19 @@ mod test {
 
     #[test]
     #[ignore]
+    fn test_2months() {
+        let the_months = vec!(
+            MonthConfig { month: 12, year: 2023 },
+            MonthConfig { month: 1, year: 2024 },
+        );
+        let config = AppConfig { months: the_months };
+        let lines = format_months(config);
+
+        assert_eq!(0, lines.len());
+    }
+
+    #[test]
+    #[ignore]
     fn test_5months_over2years() {
         let the_months = vec!(
             MonthConfig { month: 11, year: 2023 },
