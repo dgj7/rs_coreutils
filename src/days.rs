@@ -15,5 +15,23 @@ pub fn calc_days_in_month(month: u32, year: i32) -> i64 {
 mod tests {
     use super::*;
 
-    //
+    #[test]
+    fn february_non_leap() {
+        assert_eq!(28, calc_days_in_month(2, 2023));
+    }
+
+    #[test]
+    fn february_leap() {
+        assert_eq!(29, calc_days_in_month(2, 2024));
+    }
+
+    #[test]
+    fn april2023() {
+        assert_eq!(30, calc_days_in_month(4, 2023));
+    }
+
+    #[test]
+    fn oct2023() {
+        assert_eq!(31, calc_days_in_month(10, 2023));
+    }
 }
