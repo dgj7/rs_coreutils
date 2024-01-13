@@ -7,71 +7,76 @@ use string_builder::Builder;
 const BLANK_ROW: &str = "                     ";
 
 pub fn format_months(config: AppConfig) -> Vec<String> {
-    let mut results = vec![];
+    let mut lines = vec![];
 
     config.months
         .chunks(3)
-        .for_each(|three| {
-            format_chunk(three)
+        .for_each(|chunk| {
+            format_chunk(chunk)
                 .iter()
-                .for_each(|result| {
-                    let formatted = format!("{}", result);
-                    results.push(formatted)
-                });
+                .for_each(|line| lines.push(line.to_owned()));
         });
-    return results;
+    return lines;
 }
 
 fn format_chunk(slice: &[MonthConfig]) -> Vec<String> {
-    if slice.is_empty() {
-        panic!("don't know what to do with empty slice")
-    } else if slice.len() > 1 {
+    if slice.len() == 1 {
+        return format_month(&slice[0]);
+    } else if slice.len() > 3 {
+        panic!("don't know what to do with more than 3 slice len");
+    } else if slice.is_empty() {
+        panic!("don't know what to do with empty slice");
+    } else {
+        /* prepare output */
         let mut results = vec![];
+
+        /* get initial variables; for this case, there is at least 2 months */
         let mut first = format_month(&slice[0]);
         let mut second = format_month(&slice[1]);
+        let mut largest = vec!(first.len(), second.len()).iter().max().unwrap().to_owned();
 
-        if slice.len() < 3 {
-            let largest = vec!(first.len(), second.len()).iter().max().unwrap().to_owned();
-            extend(&mut first, largest);
-            extend(&mut second, largest);
-
-            for idx in 0..largest {
-                let x = first[idx].to_owned();
-                let y = second[idx].to_owned();
-                results.push(format!("{} {}", x, y));
-            }
+        /* the 3rd of 3 months is either a month, or just blank spaces */
+        let mut third = if slice.len() < 3 {
+            let mut output = vec![];
+            extend(&mut output, largest);
+            output
         } else {
-            let mut third = format_month(&slice[2]);
-            let largest = vec!(first.len(), second.len(), third.len()).iter().max().unwrap().to_owned();
-            extend(&mut first, largest);
-            extend(&mut second, largest);
-            extend(&mut third, largest);
+            let output = format_month(&slice[2]);
+            largest = vec!(first.len(), second.len(), output.len()).iter().max().unwrap().to_owned();
+            output
+        };
 
-            for idx in 0..largest {
-                let x = first[idx].to_owned();
-                let y = second[idx].to_owned();
-                let z = third[idx].to_owned();
-                results.push(format!("{} {} {}", x, y, z));
-            }
+        /* expand each to be the maximum length */
+        extend(&mut first, largest);
+        extend(&mut second, largest);
+        extend(&mut third, largest);
+
+        /* combine each line of each of the 3 results into a single line, in a single result */
+        for idx in 0..largest {
+            let x = first[idx].to_owned();
+            let y = second[idx].to_owned();
+            let z = third[idx].to_owned();
+            results.push(format!("{} {} {}", x, y, z));
         }
 
         return results;
-    } else {
-        return format_month(&slice[0]);
     }
 }
 
 fn format_month(config: &MonthConfig) -> Vec<String> {
+    /* create initial variables */
     let first_day: i32 = (NaiveDate::from_ymd_opt(config.year as i32, config.month as u32, 1).unwrap().weekday().num_days_from_sunday() + 1) as i32;
     let mut next_index: i32 = 2 - first_day;
     let max: i32 = calc_days_in_month(config.month as u32, config.year as i32) as i32;
     let month_name = month_name(&config, false);
 
+    /* create output lines var, and add static lines to it */
     let mut lines = vec![];
     lines.push(BLANK_ROW.to_string());
     lines.push(format!("{:^21}", month_name));
     lines.push(" Su Mo Tu We Th Fr Sa".to_string());
 
+    /* iterate over configs and format */
     let mut prev_row_max: i32 = 0;
     for _line_number in 1..=7 {
         if prev_row_max <= max {
@@ -85,6 +90,7 @@ fn format_month(config: &MonthConfig) -> Vec<String> {
         }
     }
 
+    /* done */
     return lines;
 }
 
