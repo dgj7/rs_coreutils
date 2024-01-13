@@ -11,11 +11,10 @@ pub fn format_months(config: AppConfig) -> Vec<String> {
 
     config.months
         .chunks(3)
-        .for_each(|chunk| {
-            format_chunk(chunk)
-                .iter()
-                .for_each(|line| lines.push(line.to_owned()));
-        });
+        .for_each(|chunk| format_chunk(chunk)
+            .iter()
+            .for_each(|line| lines.push(line.to_owned())));
+
     return lines;
 }
 
@@ -51,7 +50,7 @@ fn format_chunk(slice: &[MonthConfig]) -> Vec<String> {
         extend(&mut second, largest);
         extend(&mut third, largest);
 
-        /* combine each line of each of the 3 results into a single line, in a single result */
+        /* combine each line of each of the 3 results into a single line, added to a single result */
         for idx in 0..largest {
             let x = first[idx].to_owned();
             let y = second[idx].to_owned();
