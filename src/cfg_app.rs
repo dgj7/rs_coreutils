@@ -1,13 +1,9 @@
 use std::env::Args;
 use chrono::Datelike;
+use crate::cfg_month::MonthConfig;
 
 pub struct AppConfig {
     pub months: Vec<MonthConfig>
-}
-
-pub struct MonthConfig {
-    pub month: i16,
-    pub year: i16,
 }
 
 impl AppConfig {
@@ -23,19 +19,5 @@ impl AppConfig {
             // todo: implement args
             panic!("additional args: not yet implemented")
         }
-    }
-}
-
-impl MonthConfig {
-    pub fn new(month_input: i16, year_input: i16) -> MonthConfig {
-        if month_input < 1 || month_input > 12 {
-            panic!("bad month input: {}", month_input);
-        }
-
-        if year_input < 1 {
-            panic!("bad year input: {}", year_input);
-        }
-
-        return MonthConfig { month: month_input, year: year_input }
     }
 }

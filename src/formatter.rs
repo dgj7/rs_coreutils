@@ -1,7 +1,8 @@
 use std::string::ToString;
 use chrono::{Datelike, NaiveDate};
 use crate::days::{calc_days_in_month};
-use crate::config::{AppConfig, MonthConfig};
+use crate::cfg_app::AppConfig;
+use crate::cfg_month::MonthConfig;
 use string_builder::Builder;
 use crate::months::month_name;
 

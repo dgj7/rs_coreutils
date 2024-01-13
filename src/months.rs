@@ -1,4 +1,4 @@
-use crate::config::MonthConfig;
+use crate::cfg_month::MonthConfig;
 
 const MONTHS: [&str; 12] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 pub fn month_name(config: &MonthConfig, include_year: bool) -> String {
@@ -14,7 +14,7 @@ pub fn month_name(config: &MonthConfig, include_year: bool) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::config::MonthConfig;
+    use crate::cfg_app::MonthConfig;
     use crate::months::month_name;
 
     #[test]
