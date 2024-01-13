@@ -110,3 +110,43 @@ fn extend(vector: &mut Vec<String>, target_len: usize) {
         vector.push(BLANK_ROW.to_string());
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::cfg_app::AppConfig;
+    use crate::cfg_month::MonthConfig;
+    use crate::formatter::format_months;
+
+    #[test]
+    fn test_jan2023_only() {
+        let the_months = vec!(MonthConfig { month: 1, year: 2023 });
+        let config = AppConfig { months: the_months };
+        let lines = format_months(config);
+
+        assert_eq!(8, lines.len());
+        assert_eq!("                     ", lines.get(0).unwrap());
+        assert_eq!("       January       ", lines.get(1).unwrap());
+        assert_eq!(" Su Mo Tu We Th Fr Sa", lines.get(2).unwrap());
+        assert_eq!("  1  2  3  4  5  6  7", lines.get(3).unwrap());
+        assert_eq!("  8  9 10 11 12 13 14", lines.get(4).unwrap());
+        assert_eq!(" 15 16 17 18 19 20 21", lines.get(5).unwrap());
+        assert_eq!(" 22 23 24 25 26 27 28", lines.get(6).unwrap());
+        assert_eq!(" 29 30 31            ", lines.get(7).unwrap());
+    }
+
+    #[test]
+    #[ignore]
+    fn test_5months_over2years() {
+        let the_months = vec!(
+            MonthConfig { month: 11, year: 2023 },
+            MonthConfig { month: 12, year: 2023 },
+            MonthConfig { month: 1, year: 2024 },
+            MonthConfig { month: 2, year: 2024 },
+            MonthConfig { month: 3, year: 2024 },
+        );
+        let config = AppConfig { months: the_months };
+        let lines = format_months(config);
+
+        assert_eq!(0, lines.len());
+    }
+}

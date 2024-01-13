@@ -14,7 +14,7 @@ pub fn month_name(config: &MonthConfig, include_year: bool) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::cfg_app::MonthConfig;
+    use crate::cfg_month::MonthConfig;
     use crate::months::month_name;
 
     #[test]
