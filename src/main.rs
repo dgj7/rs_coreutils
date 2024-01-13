@@ -1,6 +1,7 @@
 mod config;
-mod calc;
+mod days;
 mod formatter;
+mod months;
 
 fn main() {
     let args = std::env::args();

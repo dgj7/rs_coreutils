@@ -1,8 +1,9 @@
 use std::string::ToString;
 use chrono::{Datelike, NaiveDate};
-use crate::calc::{calc_days_in_month, month_name};
+use crate::days::{calc_days_in_month};
 use crate::config::{AppConfig, MonthConfig};
 use string_builder::Builder;
+use crate::months::month_name;
 
 const BLANK_ROW: &str = "                     ";
 
