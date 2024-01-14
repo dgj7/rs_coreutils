@@ -63,6 +63,7 @@ impl Config {
 
                 _ => {
                     if argument.starts_with("-") {
+                        // todo: this should print help
                         panic!("unknown arg: {}", argument);
                     }
 
