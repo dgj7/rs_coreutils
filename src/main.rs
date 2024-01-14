@@ -1,4 +1,4 @@
-use crate::cal::print_cal;
+use crate::cal::generate_cal;
 
 mod cfg_app;
 mod days;
@@ -10,5 +10,6 @@ mod cal;
 
 fn main() {
     let args = std::env::args();
-    print_cal(args);
+    let lines = generate_cal(args);
+    lines.iter().for_each(|line| println!("{}", line));
 }

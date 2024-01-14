@@ -1,7 +1,6 @@
 use crate::{cfg_app, formatter};
 
-pub fn print_cal(args: std::env::Args) {
+pub fn generate_cal(args: std::env::Args) -> Vec<String> {
     let config = cfg_app::AppConfig::new(args);
-    let lines = formatter::format_months(config);
-    lines.iter().for_each(|line| println!("{}", line));
+    return formatter::format_months(config);
 }
