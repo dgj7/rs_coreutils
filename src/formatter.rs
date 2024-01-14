@@ -32,7 +32,7 @@ fn format_chunk(slice: &[MonthConfig]) -> Vec<String> {
         let mut results = vec![];
 
         /* determine if the year should go on the same line as the month */
-        let include_year_with_month_name = is_same_year(slice);
+        let include_year_with_month_name = !is_same_year(slice);
 
         /* get initial variables; for this case, there is at least 2 months */
         let mut first = format_month(&slice[0], include_year_with_month_name);
@@ -155,7 +155,7 @@ mod test {
 
         assert_eq!(9, lines.len());
         assert_eq!("                                                                 ", lines.get(0).unwrap());
-        assert_eq!("      December               January                             ", lines.get(1).unwrap());
+        assert_eq!("    December 2023         January 2024                           ", lines.get(1).unwrap());
         assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa                      ", lines.get(2).unwrap());
         assert_eq!("                 1  2      1  2  3  4  5  6                      ", lines.get(3).unwrap());
         assert_eq!("  3  4  5  6  7  8  9   7  8  9 10 11 12 13                      ", lines.get(4).unwrap());
@@ -180,7 +180,7 @@ mod test {
         // todo: year should be displayed somewhere here
         assert_eq!(18, lines.len());
         assert_eq!("                                                                 ", lines.get(0).unwrap());
-        assert_eq!("      November              December               January       ", lines.get(1).unwrap());
+        assert_eq!("    November 2023         December 2023         January 2024     ", lines.get(1).unwrap());
         assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa", lines.get(2).unwrap());
         assert_eq!("           1  2  3  4                  1  2      1  2  3  4  5  6", lines.get(3).unwrap());
         assert_eq!("  5  6  7  8  9 10 11   3  4  5  6  7  8  9   7  8  9 10 11 12 13", lines.get(4).unwrap());
@@ -189,7 +189,7 @@ mod test {
         assert_eq!(" 26 27 28 29 30        24 25 26 27 28 29 30  28 29 30 31         ", lines.get(7).unwrap());
         assert_eq!("                       31                                        ", lines.get(8).unwrap());
         assert_eq!("                                                                 ", lines.get(9).unwrap());
-        assert_eq!("    February 2024          March 2024                            ", lines.get(10).unwrap());
+        assert_eq!("      February                March                              ", lines.get(10).unwrap());
         assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa                      ", lines.get(11).unwrap());
         assert_eq!("              1  2  3                  1  2                      ", lines.get(12).unwrap());
         assert_eq!("  4  5  6  7  8  9 10   3  4  5  6  7  8  9                      ", lines.get(13).unwrap());
