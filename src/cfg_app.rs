@@ -22,8 +22,31 @@ impl AppConfig {
             /* done */
             return AppConfig { chunks };
         } else {
-            // todo: implement args
-            panic!("additional args: not yet implemented")
+            let mut months: Vec<MonthConfig> = vec![];
+
+            // todo: add to the months, by implementing args
+
+            /* convert to chunks */
+            let mut chunks = vec![];
+            for chunk in months.chunks(3) {
+                let mut chunk_config = if chunk.len() == 1 {
+                    let left = chunk.get(0).unwrap().clone();
+                    ChunkConfig::one(left, YearMode::NoDisplay)
+                } else if chunk.len() == 2 {
+                    let left = chunk.get(0).unwrap().clone();
+                    let center = chunk.get(1).unwrap().clone();
+                    ChunkConfig::two(left, center, YearMode::NoDisplay)
+                } else {
+                    let left = chunk.get(0).unwrap().clone();
+                    let center = chunk.get(1).unwrap().clone();
+                    let right = chunk.get(2).unwrap().clone();
+                    ChunkConfig::three(left, center, right, YearMode::NoDisplay)
+                };
+                chunks.push(chunk_config);
+            }
+
+            /* done */
+            return AppConfig { chunks };
         }
     }
 }

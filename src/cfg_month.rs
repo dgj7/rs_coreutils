@@ -1,3 +1,4 @@
+#[derive(Copy, Clone)]
 pub struct MonthConfig {
     pub month: i16,
     pub year: i16,
