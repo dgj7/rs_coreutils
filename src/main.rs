@@ -7,6 +7,7 @@ mod months;
 mod cfg_month;
 mod cfg_chunk;
 mod cal;
+mod cfg_args;
 
 fn main() {
     let args = std::env::args();

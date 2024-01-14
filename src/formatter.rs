@@ -7,7 +7,7 @@ use string_builder::Builder;
 use crate::cfg_chunk::{ChunkConfig, YearMode};
 use crate::cfg_chunk::YearMode::WithMonth;
 use crate::formatter::Position::{Center, Left, Right};
-use crate::months::month_name;
+use crate::months::month_display_name;
 
 const BLANK_ROW: &str = "                     ";
 
@@ -69,7 +69,7 @@ fn format_month(month_config: &MonthConfig, chunk_config: &ChunkConfig, position
     let first_day: i32 = (NaiveDate::from_ymd_opt(month_config.year as i32, month_config.month as u32, 1).unwrap().weekday().num_days_from_sunday() + 1) as i32;
     let mut next_index: i32 = 2 - first_day;
     let max: i32 = calc_days_in_month(month_config.month as u32, month_config.year as i32) as i32;
-    let month_name = month_name(&month_config, matches!(chunk_config.year_mode, WithMonth));
+    let month_name = month_display_name(&month_config, matches!(chunk_config.year_mode, WithMonth));
 
     /* create output lines var, and add static lines to it */
     let mut lines = vec![];
