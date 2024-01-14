@@ -2,8 +2,8 @@ use std::string::ToString;
 use crate::cfg_month::MonthConfig;
 
 const MONTH_DISPLAY_NAMES: [&str; 12] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const MONTH_FULL_ARGS: [&str; 12] = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
-const MONTH_ABBR_ARGS: [&str; 12] = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+const MONTH_FULL_ARGS: [&str; 12] = [    "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+const MONTH_ABBR_ARGS: [&str; 12] = [    "jan",     "feb",      "mar",   "apr",   "may", "jun",  "jul",  "aug",    "sep",       "oct",     "nov",      "dec"];
 
 pub fn month_display_name(config: &MonthConfig, include_year: bool) -> String {
     let index: usize = (config.month - 1) as usize;

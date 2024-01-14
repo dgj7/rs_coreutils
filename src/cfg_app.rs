@@ -1,5 +1,4 @@
 use std::env::Args;
-use chrono::Datelike;
 use clap::Parser;
 use crate::cfg_args::CalArguments;
 use crate::cfg_chunk::{ChunkConfig, YearMode};
@@ -7,29 +6,16 @@ use crate::cfg_month::MonthConfig;
 use crate::months::month_arg_match;
 
 pub struct AppConfig {
-    pub chunks: Vec<ChunkConfig>
+    pub chunks: Vec<ChunkConfig>,
 }
 
 impl AppConfig {
     pub fn new(args: Args) -> AppConfig {
-        if args.len() == 1 {
-            /* get the current date info */
-            let current_date = chrono::Utc::now();
-            let year = current_date.year() as i16;
-            let month = current_date.month() as i16;
-
-            /* make vector of chunks */
-            let mut chunks = vec![];
-            chunks.push(ChunkConfig::one(MonthConfig::new(month, year), YearMode::WithMonth));
-
-            /* done */
-            return AppConfig { chunks };
+        return if args.len() == 1 {
+            AppConfig { chunks: vec!(ChunkConfig::one(MonthConfig::this_month(), YearMode::WithMonth)) }
         } else {
-            let arguments = CalArguments::parse();
-            let months = args_to_month_configs(arguments);
-            let chunks = month_configs_to_chunk_configs(months);
-            return AppConfig { chunks };
-        }
+            AppConfig { chunks: month_configs_to_chunk_configs(args_to_month_configs(CalArguments::parse())) }
+        };
     }
 }
 
@@ -41,11 +27,11 @@ fn args_to_month_configs(arguments: CalArguments) -> Vec<MonthConfig> {
 
         let maybe_month_number = arguments.month.and_then(|m| month_arg_match(&m));
         if maybe_month_number.is_some() {
-            let month_number = maybe_month_number.unwrap();
-            months.push(MonthConfig { year: the_year, month: month_number });
+            let the_month = maybe_month_number.unwrap();
+            months.push(MonthConfig::new(the_year, the_month));
         } else {
             for the_month in 1..=12 {
-                months.push(MonthConfig { year: the_year, month: the_month });
+                months.push(MonthConfig::new(the_year, the_month));
             }
         }
     }

@@ -138,7 +138,7 @@ mod test {
     fn test_one_month() {
         let app_config = AppConfig {
             chunks: vec!(
-                ChunkConfig::one(MonthConfig { month: 1, year: 2024 }, WithMonth)
+                ChunkConfig::one(MonthConfig::new(1, 2024), WithMonth)
             )
         };
         let result = format_from_app_config(app_config);
@@ -159,8 +159,8 @@ mod test {
         let app_config = AppConfig {
             chunks: vec!(
                 ChunkConfig::two(
-                    MonthConfig { month: 2, year: 2024 },
-                    MonthConfig { month: 3, year: 2024 },
+                    MonthConfig::new(2, 2024),
+                    MonthConfig::new(3, 2024),
                     WithMonth)
             )
         };
@@ -183,9 +183,9 @@ mod test {
         let app_config = AppConfig {
             chunks: vec!(
                 ChunkConfig::three(
-                    MonthConfig { month: 4, year: 2024 },
-                    MonthConfig { month: 5, year: 2024 },
-                    MonthConfig { month: 6, year: 2024 },
+                    MonthConfig::new(4, 2024),
+                    MonthConfig::new(5, 2024),
+                    MonthConfig::new(6, 2024),
                     OwnLine)
             )
         };
@@ -209,11 +209,11 @@ mod test {
         let app_config = AppConfig {
             chunks: vec!(
                 ChunkConfig::three(
-                    MonthConfig { month: 7, year: 2024 },
-                    MonthConfig { month: 8, year: 2024 },
-                    MonthConfig { month: 9, year: 2024 },
+                    MonthConfig::new(7, 2024),
+                    MonthConfig::new(8, 2024),
+                    MonthConfig::new(9, 2024),
                     OwnLine),
-                ChunkConfig::one(MonthConfig { month: 10, year: 2024 }, WithMonth)
+                ChunkConfig::one(MonthConfig::new(10, 2024), WithMonth)
             )
         };
         let result = format_from_app_config(app_config);
