@@ -3,6 +3,7 @@ mod days;
 mod formatter;
 mod months;
 mod cfg_month;
+mod cfg_chunk;
 
 fn main() {
     let args = std::env::args();
