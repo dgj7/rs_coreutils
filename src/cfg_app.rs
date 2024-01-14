@@ -29,7 +29,7 @@ impl AppConfig {
             /* convert to chunks */
             let mut chunks = vec![];
             for chunk in months.chunks(3) {
-                let mut chunk_config = if chunk.len() == 1 {
+                let chunk_config = if chunk.len() == 1 {
                     let left = chunk.get(0).unwrap().clone();
                     ChunkConfig::one(left, YearMode::NoDisplay)
                 } else if chunk.len() == 2 {
