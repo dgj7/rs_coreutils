@@ -4,7 +4,6 @@ use crate::cfg_chunk::{ChunkConfig, YearMode};
 use crate::cfg_month::MonthConfig;
 
 pub struct AppConfig {
-    pub months: Vec<MonthConfig>,
     pub chunks: Vec<ChunkConfig>
 }
 
@@ -16,16 +15,12 @@ impl AppConfig {
             let year = current_date.year() as i16;
             let month = current_date.month() as i16;
 
-            /* make vector of months */
-            let mut months = vec![];
-            months.push(MonthConfig::new(month, year));
-
             /* make vector of chunks */
             let mut chunks = vec![];
             chunks.push(ChunkConfig::one(MonthConfig::new(month, year), YearMode::WithMonth));
 
             /* done */
-            return AppConfig { months, chunks };
+            return AppConfig { chunks };
         } else {
             // todo: implement args
             panic!("additional args: not yet implemented")
