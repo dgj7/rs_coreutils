@@ -22,8 +22,10 @@ impl AppConfig {
 }
 
 fn args_to_month_configs(arguments: CalArguments) -> Vec<MonthConfig> {
+    /* create storage */
     let mut months = vec![];
 
+    /* first, check out the year and month arguments, as those ones don't have flags */
     if arguments.year.is_some() {
         let the_year = arguments.year.unwrap();
 
@@ -38,13 +40,20 @@ fn args_to_month_configs(arguments: CalArguments) -> Vec<MonthConfig> {
         }
     }
 
+    /* IMPORTANT last step: sort the returning months */
+    months.sort();
+    months.dedup();
+
+    /* done */
     return months;
 }
 
 fn month_configs_to_chunk_configs(month_configs: Vec<MonthConfig>) -> Vec<ChunkConfig> {
+    /* create storage */
     let mut chunks = vec![];
     let mut years_displayed_on_own_line = vec![];
 
+    /* iterate over all months; break into chunks of 3, each of which becomes a chunk config */
     for chunk in month_configs.chunks(3) {
         let chunk_config = if chunk.len() == 1 {
             let left = chunk.get(0).unwrap().clone();
@@ -65,6 +74,7 @@ fn month_configs_to_chunk_configs(month_configs: Vec<MonthConfig>) -> Vec<ChunkC
         chunks.push(chunk_config);
     }
 
+    /* done */
     return chunks;
 }
 
