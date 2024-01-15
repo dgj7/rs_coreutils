@@ -1,5 +1,4 @@
 use std::fmt;
-use chrono::Datelike;
 
 #[derive(Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct MonthConfig {
@@ -18,13 +17,6 @@ impl MonthConfig {
         }
 
         return MonthConfig { month: month_input, year: year_input }
-    }
-
-    pub fn this_month() -> MonthConfig {
-        let current_date = chrono::Utc::now();
-        let the_year = current_date.year() as i16;
-        let the_month = current_date.month() as i16;
-        return MonthConfig { year: the_year, month: the_month };
     }
 }
 

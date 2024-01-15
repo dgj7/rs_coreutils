@@ -6,15 +6,17 @@ use crate::cfg_chunk::{ChunkConfig, YearMode};
 use crate::cfg_chunk::YearMode::{NoDisplay, OwnLine, WithMonth};
 use crate::cfg_month::MonthConfig;
 use crate::months::month_arg_match;
+use crate::today::Today;
 
 pub struct AppConfig {
     pub chunks: Vec<ChunkConfig>,
 }
 
 impl AppConfig {
-    pub fn new(args: Args) -> AppConfig {
+    //today_factory: fn() -> MonthConfig
+    pub fn new(args: Args, today: &impl Today) -> AppConfig {
         return if args.len() == 1 {
-            AppConfig { chunks: vec!(ChunkConfig::one(MonthConfig::this_month(), WithMonth)) }
+            AppConfig { chunks: vec!(ChunkConfig::one(today.make_today(), WithMonth)) }
         } else {
             AppConfig { chunks: month_configs_to_chunk_configs(args_to_month_configs(CalArguments::parse())) }
         };
