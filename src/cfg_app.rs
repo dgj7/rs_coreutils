@@ -13,7 +13,6 @@ pub struct AppConfig {
 }
 
 impl AppConfig {
-    //today_factory: fn() -> MonthConfig
     pub fn new(args: Args, today: &impl Today) -> AppConfig {
         return if args.len() == 1 {
             AppConfig { chunks: vec!(ChunkConfig::one(today.make_today(), WithMonth)) }
@@ -27,7 +26,7 @@ fn args_to_month_configs(arguments: CalArguments) -> Vec<MonthConfig> {
     /* create storage */
     let mut months = vec![];
 
-    /* first, check out the year and month arguments, as those ones don't have flags */
+    /* first: check out the year and month arguments, as those ones don't have flags */
     if arguments.year.is_some() {
         let the_year = arguments.year.unwrap();
 
@@ -40,6 +39,18 @@ fn args_to_month_configs(arguments: CalArguments) -> Vec<MonthConfig> {
                 months.push(MonthConfig::new(the_year, the_month));
             }
         }
+    } else if arguments.month.is_some() {
+        // todo: if only the month is supplied and not the year, an error is printed: cal: not a valid year january
+    }
+
+    /* next: check for months before the current month */
+    if arguments.before.is_some() {
+        // todo
+    }
+
+    /* next: months after */
+    if arguments.after.is_some() {
+        // todo
     }
 
     /* IMPORTANT last step: sort the returning months */
