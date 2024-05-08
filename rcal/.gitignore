@@ -17,4 +17,4 @@ Cargo.lock
 /target
 
 # added by me
-.idea/*
+../.idea/vcs.xml
