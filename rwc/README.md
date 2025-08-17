@@ -63,5 +63,5 @@ SEE ALSO
        Full documentation <https://www.gnu.org/software/coreutils/wc>
        or available locally via: info '(coreutils) wc invocation'
 ```
-
 ---
+[Go Back](..)
