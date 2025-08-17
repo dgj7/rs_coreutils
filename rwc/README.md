@@ -5,6 +5,11 @@ Do not use this `rwc` program in lieu of `wc` under any circumstances.  This is 
 
 Note that, as of `v1.0.2`, `rwc` doesn't yet return the same values as `wc`.
 
+## Progress
+* [ ] implement argument parsing, with config struct
+* [ ] implement `wc` functionality
+* [ ] unit tests
+
 ---
 from `man wc`:
 ```
