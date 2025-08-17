@@ -4,24 +4,24 @@ use std::env::Args;
 /// Storage for the application configuration.
 ///
 pub(crate) struct Config {
-    print_help_and_exit: bool,
-    print_version_and_exit: bool,
-    unrecognized: Vec<String>,
+    pub(crate) print_help_and_exit: bool,
+    pub(crate) print_version_and_exit: bool,
+    pub(crate) unrecognized: Vec<String>,
 
-    file_paths: Vec<String>,
+    pub(crate) file_paths: Vec<String>,
 
-    change_only_access_time: bool,
-    change_only_modification_time: bool,
+    pub(crate) change_only_access_time: bool,
+    pub(crate) change_only_modification_time: bool,
 
-    do_not_create: bool,
-    affect_symlink_instead_of_file: bool,
+    pub(crate) do_not_create: bool,
+    pub(crate) affect_symlink_instead_of_file: bool,
 
-    date_string: Option<String>,
-    reference_file: Option<String>,
-    time_word: Option<String>,
+    pub(crate) date_string: Option<String>,
+    pub(crate) reference_file: Option<String>,
+    pub(crate) time_word: Option<String>,
 
-    use_specified_time_stamp: bool,
-    specified_time_stamp: Option<String>,
+    pub(crate) use_specified_time_stamp: bool,
+    pub(crate) specified_time_stamp: Option<String>,
 }
 
 impl Default for Config {
