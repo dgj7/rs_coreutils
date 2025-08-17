@@ -4,7 +4,9 @@
 Do not use this `rtouch` program in lieu of `touch` under any circumstances.  This is not a suitable replacement.
 
 ## Progress
-???
+* [x] implement argument parsing, with `Config` struct
+* [ ] implement `touch` functionality
+* [ ] unit tests
 
 ---
 from `man touch`:
