@@ -3,6 +3,11 @@
 
 Do not use this `rcal` program in lieu of `cal` under any circumstances.  This is not a suitable replacement.
 
+## Progress
+* [ ] implement argument parsing, with config struct
+* [ ] implement `cal` functionality
+* [ ] unit tests
+
 ---
 from `man cal`:
 ```
