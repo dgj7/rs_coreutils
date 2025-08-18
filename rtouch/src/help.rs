@@ -8,4 +8,5 @@ pub(crate) fn version(_config: &Config) {
 
 pub(crate) fn help(config: &Config) {
     version(config);
+    // todo: moar
 }

@@ -48,12 +48,12 @@ fn find_times(config: &Config) -> FileTimes {
     let ts = timestamp(config);
 
     if config.change_only_access_time {
-        times.set_accessed(ts);
+        times.set_accessed(ts.accessed);
     } else if config.change_only_modification_time {
-        times.set_modified(ts);
+        times.set_modified(ts.modified);
     } else {
-        times.set_accessed(ts);
-        times.set_modified(ts);
+        times.set_accessed(ts.accessed);
+        times.set_modified(ts.modified);
     }
 
     times
