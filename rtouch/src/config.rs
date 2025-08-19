@@ -6,7 +6,7 @@ use std::env::Args;
 pub(crate) struct Config {
     pub(crate) print_help_and_exit: bool,
     pub(crate) print_version_and_exit: bool,
-    pub(crate) unrecognized: Vec<String>,
+    pub(crate) unrecognized: Vec<Unrecognized>,
 
     pub(crate) file_paths: Vec<String>,
 
@@ -22,6 +22,14 @@ pub(crate) struct Config {
 
     pub(crate) use_specified_time_stamp: bool,
     pub(crate) specified_time_stamp: Option<String>,
+}
+
+///
+/// Storage for arguments that aren't immediately recognized.
+///
+pub(crate) struct Unrecognized {
+    pub(crate) index: usize,
+    pub(crate) argument: Option<String>,
 }
 
 impl Default for Config {
@@ -63,7 +71,7 @@ impl Config {
         let mut file_paths_started = false;
 
         /* modify the default configuration based on input arguments */
-        for argument in args.skip(1) {
+        for (index, argument) in args.skip(1).enumerate() {
             if file_paths_started {
                 config.file_paths.push(argument);
             } else if prior_was_time_stamp {
@@ -115,7 +123,7 @@ impl Config {
                             let actual = argument.split("=").collect::<Vec<&str>>()[1];
                             config.time_word = Some(actual.to_string());
                         } else if argument.starts_with("-") && argument.len() > 1 {
-                            config.unrecognized.push(argument);
+                            config.unrecognized.push(Unrecognized::new(index, argument.to_string()));
                         } else {
                             config.file_paths.push(argument);
                             file_paths_started = true;
@@ -126,5 +134,14 @@ impl Config {
         }
 
         config
+    }
+}
+
+impl Unrecognized {
+    fn new(idx: usize, arg: String) -> Unrecognized {
+        Unrecognized {
+            index: idx,
+            argument: Some(arg),
+        }
     }
 }
