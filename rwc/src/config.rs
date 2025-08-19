@@ -1,6 +1,9 @@
 use std::env::Args;
 use std::path::PathBuf;
 
+///
+/// Storage for the application configuration.
+///
 pub struct Config {
     pub show_bytes: bool,
     pub show_chars: bool,
