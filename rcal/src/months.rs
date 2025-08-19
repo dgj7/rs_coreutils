@@ -9,30 +9,30 @@ pub fn month_display_name(config: &MonthConfig, include_year: bool) -> String {
     let index: usize = (config.month - 1) as usize;
     let month = MONTH_DISPLAY_NAMES[index];
 
-    return if include_year {
+    if include_year {
         format!("{} {}", month, config.year)
     } else {
         month.to_string()
     }
 }
 
-pub fn month_arg_match(month_arg: &String) -> Option<i16> {
+pub fn month_arg_match(month_arg: &str) -> Option<i16> {
     /* look for full month names */
     for (index, value) in MONTH_FULL_ARGS.iter().enumerate() {
-        if month_arg.to_lowercase() == value.to_string() {
+        if month_arg.to_lowercase() == *value {
             return Some((index+1) as i16);
         }
     }
 
     /* look for partial month names */
     for (index, value) in MONTH_ABBR_ARGS.iter().enumerate() {
-        if month_arg.to_lowercase() == value.to_string() {
+        if month_arg.to_lowercase() == *value {
             return Some((index+1) as i16);
         }
     }
 
     /* none found */
-    return None;
+    None
 }
 
 #[cfg(test)]

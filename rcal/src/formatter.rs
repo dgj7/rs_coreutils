@@ -20,7 +20,7 @@ pub fn format_from_app_config(config: AppConfig) -> Vec<String> {
             .iter()
             .for_each(|line| lines.push(line.to_owned())));
 
-    return lines;
+    lines
 }
 
 enum Position {
@@ -36,11 +36,11 @@ fn format_chunk(chunk: &ChunkConfig) -> Vec<String> {
     /* grab each of the 3 months, which may be an empty vector */
     let mut left = format_month(&chunk.left, chunk, Left);
     let mut center = match &chunk.center {
-        Some(x) => format_month(x, &chunk, Center),
+        Some(x) => format_month(x, chunk, Center),
         None => vec![]
     };
     let mut right = match &chunk.right {
-        Some(x) => format_month(x, &chunk, Right),
+        Some(x) => format_month(x, chunk, Right),
         None => vec![]
     };
 
@@ -61,7 +61,7 @@ fn format_chunk(chunk: &ChunkConfig) -> Vec<String> {
     }
 
     /* done */
-    return output;
+    output
 }
 
 fn format_month(month_config: &MonthConfig, chunk_config: &ChunkConfig, position: Position) -> Vec<String> {
@@ -69,7 +69,7 @@ fn format_month(month_config: &MonthConfig, chunk_config: &ChunkConfig, position
     let first_day: i32 = (NaiveDate::from_ymd_opt(month_config.year as i32, month_config.month as u32, 1).unwrap().weekday().num_days_from_sunday() + 1) as i32;
     let mut next_index: i32 = 2 - first_day;
     let max: i32 = calc_days_in_month(month_config.month as u32, month_config.year as i32) as i32;
-    let month_name = month_display_name(&month_config, matches!(chunk_config.year_mode, WithMonth));
+    let month_name = month_display_name(month_config, matches!(chunk_config.year_mode, WithMonth));
 
     /* create output lines var, and add static lines to it */
     let mut lines = vec![];
@@ -95,7 +95,7 @@ fn format_month(month_config: &MonthConfig, chunk_config: &ChunkConfig, position
             let mut line_builder = Builder::default();
             for _column_number in 0..7 {
                 line_builder.append(format!(" {:>2}", format_day(next_index, max)));
-                next_index = next_index + 1;
+                next_index += 1;
             }
             prev_row_max = next_index;
             lines.push(line_builder.string().unwrap().clone());
@@ -103,17 +103,15 @@ fn format_month(month_config: &MonthConfig, chunk_config: &ChunkConfig, position
     }
 
     /* done */
-    return lines;
+    lines
 }
 
 fn format_day(day: i32, max_days: i32) -> String {
-    return if day > max_days {
-        "  ".to_string()
-    } else if day <= 0 {
+    if day > max_days || day <= 0 {
         "  ".to_string()
     } else {
         format!("{:>2}", day)
-    };
+    }
 }
 
 fn extend(vector: &mut Vec<String>, target_len: usize) {
@@ -122,8 +120,8 @@ fn extend(vector: &mut Vec<String>, target_len: usize) {
     }
 }
 
-fn find_largest(left: &Vec<String>, center: &Vec<String>, right: &Vec<String>) -> usize {
-    return vec!(left.len(), center.len(), right.len()).iter().max().unwrap().to_owned();
+fn find_largest(left: &[String], center: &[String], right: &[String]) -> usize {
+    [left.len(), center.len(), right.len()].iter().max().unwrap().to_owned()
 }
 
 #[cfg(test)]

@@ -8,7 +8,7 @@ pub struct MonthConfig {
 
 impl MonthConfig {
     pub fn new(month_input: i16, year_input: i16) -> MonthConfig {
-        if month_input < 1 || month_input > 12 {
+        if !(1..=12).contains(&month_input) {
             panic!("bad month input: {}", month_input);
         }
 
@@ -16,23 +16,23 @@ impl MonthConfig {
             panic!("bad year input: {}", year_input);
         }
 
-        return MonthConfig { month: month_input, year: year_input }
+        MonthConfig { month: month_input, year: year_input }
     }
 
     pub fn prev(&self) -> MonthConfig {
-        return if self.month == 1 {
+        if self.month == 1 {
             MonthConfig { month: 12, year: self.year - 1 }
         } else {
             MonthConfig { month: self.month - 1, year: self.year }
-        };
+        }
     }
 
     pub fn next(&self) -> MonthConfig {
-        return if self.month == 12 {
+        if self.month == 12 {
             MonthConfig { month: 1, year: self.year + 1 }
         } else {
             MonthConfig { month: self.month + 1, year: self.year }
-        };
+        }
     }
 }
 
