@@ -61,6 +61,8 @@ impl Config {
                 "--help" => config.show_help_exit = true,
                 "--version" => config.show_version_exit = true,
 
+                // todo: --files0-from=F
+
                 _ => {
                     if argument.starts_with("-") {
                         // todo: this should print help
