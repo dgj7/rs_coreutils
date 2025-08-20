@@ -222,7 +222,30 @@ mod test {
         assert_eq!(0, config.unrecognized.len());
 
         assert_eq!(
-            "Config { turn_off_highlight_today: false, display_julian_calendar: true, display_date_of_easter: true, display_julian_days: true, display_date_orthodox_easter: true, print_country_codes: true, print_number_of_week: true, display_for_current_year: true, previous_current_next_month: true, only_current_month: true, cal_mode: true, weeks_start_monday: true, weeks_start_sunday: true, use_old_style_format: true, month: Some(\"january\"), country_code: Some(\"uk\"), months_add_after: Some(\"5\"), months_add_before: Some(\"6\"), debug_current_date: Some(\"2012-11\"), debug_highlighting: Some(\"2002-06-08\"), first_week_has_at_least_days: Some(\"4\"), unrecognized: [] }",
+            "Config { \
+            turn_off_highlight_today: false, \
+            display_julian_calendar: true, \
+            display_date_of_easter: true, \
+            display_julian_days: true, \
+            display_date_orthodox_easter: true, \
+            print_country_codes: true, \
+            print_number_of_week: true, \
+            display_for_current_year: true, \
+            previous_current_next_month: true, \
+            only_current_month: true, \
+            cal_mode: true, \
+            weeks_start_monday: true, \
+            weeks_start_sunday: true, \
+            use_old_style_format: true, \
+            month: Some(\"january\"), \
+            country_code: Some(\"uk\"), \
+            months_add_after: Some(\"5\"), \
+            months_add_before: Some(\"6\"), \
+            debug_current_date: Some(\"2012-11\"), \
+            debug_highlighting: Some(\"2002-06-08\"), \
+            first_week_has_at_least_days: Some(\"4\"), \
+            unrecognized: [] \
+            }",
             format!("{:?}", config)
         );
     }
@@ -259,7 +282,30 @@ mod test {
         assert_eq!(0, config.unrecognized.len());
 
         assert_eq!(
-            "Config { turn_off_highlight_today: false, display_julian_calendar: false, display_date_of_easter: false, display_julian_days: false, display_date_orthodox_easter: false, print_country_codes: false, print_number_of_week: false, display_for_current_year: false, previous_current_next_month: false, only_current_month: false, cal_mode: false, weeks_start_monday: false, weeks_start_sunday: false, use_old_style_format: false, month: None, country_code: None, months_add_after: None, months_add_before: None, debug_current_date: None, debug_highlighting: None, first_week_has_at_least_days: None, unrecognized: [] }",
+            "Config { \
+            turn_off_highlight_today: false, \
+            display_julian_calendar: false, \
+            display_date_of_easter: false, \
+            display_julian_days: false, \
+            display_date_orthodox_easter: false, \
+            print_country_codes: false, \
+            print_number_of_week: false, \
+            display_for_current_year: false, \
+            previous_current_next_month: false, \
+            only_current_month: false, \
+            cal_mode: false, \
+            weeks_start_monday: false, \
+            weeks_start_sunday: false, \
+            use_old_style_format: false, \
+            month: None, \
+            country_code: None, \
+            months_add_after: None, \
+            months_add_before: None, \
+            debug_current_date: None, \
+            debug_highlighting: None, \
+            first_week_has_at_least_days: None, \
+            unrecognized: [] \
+            }",
             format!("{:?}", config)
         );
     }
