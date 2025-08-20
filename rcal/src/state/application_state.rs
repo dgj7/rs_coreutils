@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 use std::env::Args;
 use crate::config::Config;
-use crate::time::chunk::{Chunk, YearMode};
-use crate::time::chunk::YearMode::{NoDisplay, OwnLine, WithMonth};
+use crate::state::chunk::{Chunk, YearMode};
+use crate::state::chunk::YearMode::{NoDisplay, OwnLine, WithMonth};
 use crate::time::today::Today;
 use crate::time::month::Month;
 use crate::time::name::month_arg_match;
