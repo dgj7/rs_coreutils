@@ -1,28 +1,24 @@
 use std::collections::HashSet;
 use std::env::Args;
-use clap::Parser;
-use crate::cfg_args::CalArguments;
-use crate::cfg_chunk::{ChunkConfig, YearMode};
-use crate::cfg_chunk::YearMode::{NoDisplay, OwnLine, WithMonth};
-use crate::cfg_month::MonthConfig;
-use crate::months::month_arg_match;
-use crate::today::Today;
+use crate::config::Config;
+use crate::time::chunk::{Chunk, YearMode};
+use crate::time::chunk::YearMode::{NoDisplay, OwnLine, WithMonth};
+use crate::time::today::Today;
+use crate::time::month::Month;
+use crate::time::name::month_arg_match;
 
-pub struct AppConfig {
-    pub chunks: Vec<ChunkConfig>,
+pub struct ApplicationState {
+    pub chunks: Vec<Chunk>,
 }
 
-impl AppConfig {
-    pub fn new(args: Args, today: &impl Today) -> AppConfig {
-        if args.len() == 1 {
-            AppConfig { chunks: vec!(ChunkConfig::one(today.make_today(), WithMonth)) }
-        } else {
-            AppConfig { chunks: month_configs_to_chunk_configs(args_to_month_configs(CalArguments::parse(), today)) }
-        }
+impl ApplicationState {
+    pub fn new(config: Config, today: &impl Today) -> ApplicationState {
+        // todo: make sure that no-arg (argc==1) is handled; previously there was if/else here
+        ApplicationState { chunks: month_configs_to_chunk_configs(args_to_month_configs(config, today)) }
     }
 }
 
-fn args_to_month_configs(arguments: CalArguments, today: &impl Today) -> Vec<MonthConfig> {
+fn args_to_month_configs(arguments: Config, today: &impl Today) -> Vec<Month> {
     /* create storage */
     let mut months = vec![];
 
@@ -31,10 +27,10 @@ fn args_to_month_configs(arguments: CalArguments, today: &impl Today) -> Vec<Mon
         let the_year = arguments.year.unwrap();
 
         if let Some(the_month) = arguments.month.and_then(|m| month_arg_match(&m)) {
-            months.push(MonthConfig::new(the_month, the_year));
+            months.push(Month::new(the_month, the_year));
         } else {
             for the_month in 1..=12 {
-                months.push(MonthConfig::new(the_month, the_year));
+                months.push(Month::new(the_month, the_year));
             }
         }
     } else if arguments.month.is_some() {
@@ -80,7 +76,7 @@ fn args_to_month_configs(arguments: CalArguments, today: &impl Today) -> Vec<Mon
     months
 }
 
-fn month_configs_to_chunk_configs(month_configs: Vec<MonthConfig>) -> Vec<ChunkConfig> {
+fn month_configs_to_chunk_configs(month_configs: Vec<Month>) -> Vec<Chunk> {
     /* create storage */
     let mut chunks = vec![];
     let mut years_displayed_on_own_line = vec![];
@@ -90,18 +86,18 @@ fn month_configs_to_chunk_configs(month_configs: Vec<MonthConfig>) -> Vec<ChunkC
         let chunk_config = if chunk.len() == 1 {
             let left = *chunk.first().unwrap();
             let year_mode = determine_year_mode(chunk, &mut years_displayed_on_own_line);
-            ChunkConfig::one(left, year_mode)
+            Chunk::one(left, year_mode)
         } else if chunk.len() == 2 {
             let left = *chunk.first().unwrap();
             let center = *chunk.get(1).unwrap();
             let year_mode = determine_year_mode(chunk, &mut years_displayed_on_own_line);
-            ChunkConfig::two(left, center, year_mode)
+            Chunk::two(left, center, year_mode)
         } else {
             let left = *chunk.first().unwrap();
             let center = *chunk.get(1).unwrap();
             let right = *chunk.get(2).unwrap();
             let year_mode = determine_year_mode(chunk, &mut years_displayed_on_own_line);
-            ChunkConfig::three(left, center, right, year_mode)
+            Chunk::three(left, center, right, year_mode)
         };
         chunks.push(chunk_config);
     }
@@ -110,8 +106,8 @@ fn month_configs_to_chunk_configs(month_configs: Vec<MonthConfig>) -> Vec<ChunkC
     chunks
 }
 
-fn determine_year_mode(chunk: &[MonthConfig], years_displayed_on_own_line: &mut [i16]) -> YearMode {
-    let years_in_current_chunk: HashSet<i16> = chunk.iter()
+fn determine_year_mode(chunk: &[Month], years_displayed_on_own_line: &mut [u16]) -> YearMode {
+    let years_in_current_chunk: HashSet<u16> = chunk.iter()
         .map(|c| c.year)
         .collect();
     if years_in_current_chunk.len() > 1 {
@@ -138,26 +134,22 @@ mod tests_new_app_cfg {
 
 #[cfg(test)]
 mod tests_month_configs_vector {
-    use crate::cfg_app::args_to_month_configs;
-    use crate::cfg_args::CalArguments;
-    use crate::cfg_month::MonthConfig;
-    use crate::today::Today;
+    use crate::config::Config;
+    use crate::state::application_state::args_to_month_configs;
+    use crate::time::month::Month;
+    use crate::time::today::Today;
     struct TestOnlyToday {}
 
     impl Today for TestOnlyToday {
-        fn make_today(&self) -> MonthConfig {
-            return MonthConfig { month: 2, year: 2024 };
+        fn make_today(&self) -> Month {
+            return Month { month: 2, year: 2024 };
         }
     }
 
     #[test]
     fn test_no_args() {
-        let input = CalArguments {
-            year: None,
-            month: None,
-            before: None,
-            after: None,
-        };
+        let mut input = Config::default();
+        
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(1, output.len());
@@ -167,23 +159,17 @@ mod tests_month_configs_vector {
     #[test]
     #[should_panic]
     fn test_month_only() {
-        let input = CalArguments {
-            year: None,
-            month: Some("January".to_string()),
-            before: None,
-            after: None,
-        };
+        let mut input = Config::default();
+        input.month = Some("January".to_string());
+        
         args_to_month_configs(input, &TestOnlyToday{});
     }
 
     #[test]
     fn test_year_only() {
-        let input = CalArguments {
-            year: Some(2022),
-            month: None,
-            before: None,
-            after: None,
-        };
+        let mut input = Config::default();
+        input.year = Some(2022);
+        
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(12, output.len());
@@ -203,12 +189,10 @@ mod tests_month_configs_vector {
 
     #[test]
     fn test_month_and_year() {
-        let input = CalArguments {
-            year: Some(2024),
-            month: Some("may".to_string()),
-            before: None,
-            after: None,
-        };
+        let mut input = Config::default();
+        input.year = Some(2024);
+        input.month = Some("may".to_string());
+        
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(1, output.len());
@@ -217,12 +201,9 @@ mod tests_month_configs_vector {
 
     #[test]
     fn test_before_only() {
-        let input = CalArguments {
-            year: None,
-            month: None,
-            before: Some(3),
-            after: None,
-        };
+        let mut input = Config::default();
+        input.before = Some(3);
+        
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(4, output.len());
@@ -234,12 +215,9 @@ mod tests_month_configs_vector {
 
     #[test]
     fn test_after_only() {
-        let input = CalArguments {
-            year: None,
-            month: None,
-            before: None,
-            after: Some(4),
-        };
+        let mut input = Config::default();
+        input.after = Some(4);
+        
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(5, output.len());

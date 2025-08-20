@@ -15,18 +15,18 @@ pub fn month_display_name(config: &Month, include_year: bool) -> String {
     }
 }
 
-pub fn month_arg_match(month_arg: &str) -> Option<i16> {
+pub fn month_arg_match(month_arg: &str) -> Option<u16> {
     /* look for full month names */
     for (index, value) in MONTH_FULL_ARGS.iter().enumerate() {
         if month_arg.to_lowercase() == *value {
-            return Some((index+1) as i16);
+            return Some((index+1) as u16);
         }
     }
 
     /* look for partial month names */
     for (index, value) in MONTH_ABBR_ARGS.iter().enumerate() {
         if month_arg.to_lowercase() == *value {
-            return Some((index+1) as i16);
+            return Some((index+1) as u16);
         }
     }
 

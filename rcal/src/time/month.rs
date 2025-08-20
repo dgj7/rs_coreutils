@@ -2,12 +2,12 @@ use std::fmt;
 
 #[derive(Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Month {
-    pub year: i16,
-    pub month: i16,
+    pub year: u16,
+    pub month: u16,
 }
 
 impl Month {
-    pub fn new(month_input: i16, year_input: i16) -> Month {
+    pub fn new(month_input: u16, year_input: u16) -> Month {
         if !(1..=12).contains(&month_input) {
             panic!("bad month input: {}", month_input);
         }

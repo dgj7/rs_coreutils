@@ -10,8 +10,8 @@ pub struct DefaultToday {}
 impl Today for DefaultToday {
     fn make_today(&self) -> Month {
         let current_date = chrono::Utc::now();
-        let the_year = current_date.year() as i16;
-        let the_month = current_date.month() as i16;
+        let the_year = current_date.year() as u16;
+        let the_month = current_date.month() as u16;
         Month { year: the_year, month: the_month }
     }
 }

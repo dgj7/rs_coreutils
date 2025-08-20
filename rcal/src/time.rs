@@ -1,6 +1,6 @@
 
-mod month;
-mod chunk;
-mod name;
+pub(crate) mod month;
+pub(crate) mod chunk;
+pub(crate) mod name;
 mod days;
-mod today;
+pub(crate) mod today;

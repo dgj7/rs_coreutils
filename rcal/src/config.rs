@@ -5,6 +5,7 @@ use std::env::Args;
 ///
 #[derive(Debug, Clone)]
 pub(crate) struct Config {
+    /* input indicators */
     pub(crate) turn_off_highlight_today: bool,
     pub(crate) display_julian_calendar: bool,
     pub(crate) display_date_of_easter: bool,
@@ -12,7 +13,6 @@ pub(crate) struct Config {
     pub(crate) display_date_orthodox_easter: bool,
     pub(crate) print_country_codes: bool,
     pub(crate) print_number_of_week: bool,
-    pub(crate) display_for_current_year: bool,
     pub(crate) previous_current_next_month: bool,
     pub(crate) only_current_month: bool,
     pub(crate) cal_mode: bool,
@@ -20,14 +20,22 @@ pub(crate) struct Config {
     pub(crate) weeks_start_sunday: bool,
     pub(crate) use_old_style_format: bool,
 
+    /* string fields read from command line */
     pub(crate) month: Option<String>,
     pub(crate) country_code: Option<String>,
+    pub(crate) year_string: Option<String>,
     pub(crate) months_add_after: Option<String>,
     pub(crate) months_add_before: Option<String>,
     pub(crate) debug_current_date: Option<String>,
     pub(crate) debug_highlighting: Option<String>,
     pub(crate) first_week_has_at_least_days: Option<String>,
 
+    /* for compatibility with old app */
+    pub(crate) year: Option<u16>,
+    pub(crate) before: Option<usize>,
+    pub(crate) after: Option<usize>,
+
+    /* unrecognized arguments */
     pub(crate) unrecognized: Vec<Unrecognized>,
 }
 
@@ -54,7 +62,6 @@ impl Default for Config {
             display_date_orthodox_easter: false,
             print_country_codes: false,
             print_number_of_week: false,
-            display_for_current_year: false,
             previous_current_next_month: false,
             only_current_month: false,
             cal_mode: false,
@@ -64,11 +71,16 @@ impl Default for Config {
 
             month: None,
             country_code: None,
-            months_add_after: None,
-            months_add_before: None,
+            year_string: None,       // todo: remove?
+            months_add_after: None,  // todo: remove?
+            months_add_before: None, // todo: remove?
             debug_current_date: None,
             debug_highlighting: None,
             first_week_has_at_least_days: None,
+
+            year: None,
+            before: None,
+            after: None,
 
             unrecognized: vec![],
         }
@@ -91,6 +103,7 @@ impl Config {
 
         let mut prev_arg_month = false;
         let mut prev_arg_country_code = false;
+        let mut prev_arg_year = false;
         let mut prev_arg_months_add_after = false;
         let mut prev_arg_months_add_before = false;
         let mut prev_arg_debug_current_date = false;
@@ -104,12 +117,18 @@ impl Config {
             } else if prev_arg_country_code {
                 prev_arg_country_code = false;
                 config.country_code = Some(argument.to_owned());
+            } else if prev_arg_year {
+                prev_arg_year = false;
+                config.year_string = Some(argument.to_owned());
+                config.year = Some(argument.parse::<u16>().unwrap());
             } else if prev_arg_months_add_after {
                 prev_arg_months_add_after = false;
                 config.months_add_after = Some(argument.to_owned());
+                config.after = Some(argument.parse::<usize>().unwrap());
             } else if prev_arg_months_add_before {
                 prev_arg_months_add_before = false;
                 config.months_add_before = Some(argument.to_owned());
+                config.before = Some(argument.parse::<usize>().unwrap());
             } else if prev_arg_debug_current_date {
                 prev_arg_debug_current_date = false;
                 config.debug_current_date = Some(argument.to_owned());
@@ -128,7 +147,6 @@ impl Config {
                     "-o" => config.display_date_orthodox_easter = true,
                     "-p" => config.print_country_codes = true,
                     "-w" => config.print_number_of_week = true,
-                    "-y" => config.display_for_current_year = true,
                     "-3" => config.previous_current_next_month = true,
                     "-1" => config.only_current_month = true,
                     "-C" => config.cal_mode = true,
@@ -138,6 +156,7 @@ impl Config {
 
                     "-m" => prev_arg_month = true,
                     "-s" => prev_arg_country_code = true,
+                    "-y" => prev_arg_year = true,
                     "-A" => prev_arg_months_add_after = true,
                     "-B" => prev_arg_months_add_before = true,
                     "-d" => prev_arg_debug_current_date = true,
@@ -175,22 +194,29 @@ mod test {
             String::from("-J"),
             String::from("-e"),
             String::from("-j"),
-            String::from("-m"), String::from("january"),
+            String::from("-m"),
+            String::from("january"),
             String::from("-o"),
             String::from("-p"),
-            String::from("-s"), String::from("uk"),
+            String::from("-s"),
+            String::from("uk"),
             String::from("-w"),
-            String::from("-y"),
+            String::from("-y"), String::from("2012"),
             String::from("-3"),
             String::from("-1"),
-            String::from("-A"), String::from("5"),
-            String::from("-B"), String::from("6"),
+            String::from("-A"),
+            String::from("5"),
+            String::from("-B"),
+            String::from("6"),
             String::from("-C"),
-            String::from("-d"), String::from("2012-11"),
-            String::from("-H"), String::from("2002-06-08"),
+            String::from("-d"),
+            String::from("2012-11"),
+            String::from("-H"),
+            String::from("2002-06-08"),
             String::from("-M"),
             String::from("-S"),
-            String::from("-W"), String::from("4"),
+            String::from("-W"),
+            String::from("4"),
             String::from("-b"),
         ];
 
@@ -203,7 +229,6 @@ mod test {
         assert_eq!(true, config.display_date_orthodox_easter);
         assert_eq!(true, config.print_country_codes);
         assert_eq!(true, config.print_number_of_week);
-        assert_eq!(true, config.display_for_current_year);
         assert_eq!(true, config.previous_current_next_month);
         assert_eq!(true, config.only_current_month);
         assert_eq!(true, config.cal_mode);
@@ -213,6 +238,7 @@ mod test {
 
         assert_eq!("january", config.month.clone().unwrap());
         assert_eq!("uk", config.country_code.clone().unwrap());
+        assert_eq!(2012, config.year.clone().unwrap());
         assert_eq!("5", config.months_add_after.clone().unwrap());
         assert_eq!("6", config.months_add_before.clone().unwrap());
         assert_eq!("2012-11", config.debug_current_date.clone().unwrap());
@@ -230,7 +256,6 @@ mod test {
             display_date_orthodox_easter: true, \
             print_country_codes: true, \
             print_number_of_week: true, \
-            display_for_current_year: true, \
             previous_current_next_month: true, \
             only_current_month: true, \
             cal_mode: true, \
@@ -239,11 +264,15 @@ mod test {
             use_old_style_format: true, \
             month: Some(\"january\"), \
             country_code: Some(\"uk\"), \
+            year_string: Some(\"2012\"), \
             months_add_after: Some(\"5\"), \
             months_add_before: Some(\"6\"), \
             debug_current_date: Some(\"2012-11\"), \
             debug_highlighting: Some(\"2002-06-08\"), \
             first_week_has_at_least_days: Some(\"4\"), \
+            year: Some(2012), \
+            before: Some(6), \
+            after: Some(5), \
             unrecognized: [] \
             }",
             format!("{:?}", config)
@@ -263,7 +292,6 @@ mod test {
         assert_eq!(false, config.display_date_orthodox_easter);
         assert_eq!(false, config.print_country_codes);
         assert_eq!(false, config.print_number_of_week);
-        assert_eq!(false, config.display_for_current_year);
         assert_eq!(false, config.previous_current_next_month);
         assert_eq!(false, config.only_current_month);
         assert_eq!(false, config.cal_mode);
@@ -273,6 +301,7 @@ mod test {
 
         assert_eq!(None, config.month);
         assert_eq!(None, config.country_code);
+        assert_eq!(None, config.year);
         assert_eq!(None, config.months_add_after);
         assert_eq!(None, config.months_add_before);
         assert_eq!(None, config.debug_current_date);
@@ -290,7 +319,6 @@ mod test {
             display_date_orthodox_easter: false, \
             print_country_codes: false, \
             print_number_of_week: false, \
-            display_for_current_year: false, \
             previous_current_next_month: false, \
             only_current_month: false, \
             cal_mode: false, \
@@ -299,11 +327,15 @@ mod test {
             use_old_style_format: false, \
             month: None, \
             country_code: None, \
+            year_string: None, \
             months_add_after: None, \
             months_add_before: None, \
             debug_current_date: None, \
             debug_highlighting: None, \
             first_week_has_at_least_days: None, \
+            year: None, \
+            before: None, \
+            after: None, \
             unrecognized: [] \
             }",
             format!("{:?}", config)
