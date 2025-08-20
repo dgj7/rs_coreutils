@@ -5,7 +5,7 @@ Do not use this `rtouch` program in lieu of `touch` under any circumstances.  Th
 
 ## Progress
 * [x] implement argument parsing, with `Config` struct
-* [ ] implement `touch` functionality
+* [x] implement `touch` functionality
 * [ ] unit tests
 
 ---
