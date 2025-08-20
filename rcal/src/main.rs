@@ -1,3 +1,5 @@
+extern crate alloc;
+
 use crate::config::Config;
 
 mod config;
