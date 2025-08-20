@@ -1,13 +1,13 @@
 use std::fmt;
 
 #[derive(Copy, Clone, Eq, Ord, PartialEq, PartialOrd)]
-pub struct MonthConfig {
+pub struct Month {
     pub year: i16,
     pub month: i16,
 }
 
-impl MonthConfig {
-    pub fn new(month_input: i16, year_input: i16) -> MonthConfig {
+impl Month {
+    pub fn new(month_input: i16, year_input: i16) -> Month {
         if !(1..=12).contains(&month_input) {
             panic!("bad month input: {}", month_input);
         }
@@ -16,27 +16,27 @@ impl MonthConfig {
             panic!("bad year input: {}", year_input);
         }
 
-        MonthConfig { month: month_input, year: year_input }
+        Month { month: month_input, year: year_input }
     }
 
-    pub fn prev(&self) -> MonthConfig {
+    pub fn prev(&self) -> Month {
         if self.month == 1 {
-            MonthConfig { month: 12, year: self.year - 1 }
+            Month { month: 12, year: self.year - 1 }
         } else {
-            MonthConfig { month: self.month - 1, year: self.year }
+            Month { month: self.month - 1, year: self.year }
         }
     }
 
-    pub fn next(&self) -> MonthConfig {
+    pub fn next(&self) -> Month {
         if self.month == 12 {
-            MonthConfig { month: 1, year: self.year + 1 }
+            Month { month: 1, year: self.year + 1 }
         } else {
-            MonthConfig { month: self.month + 1, year: self.year }
+            Month { month: self.month + 1, year: self.year }
         }
     }
 }
 
-impl fmt::Display for MonthConfig {
+impl fmt::Display for Month {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}/{}", self.month, self.year)
     }
@@ -44,15 +44,15 @@ impl fmt::Display for MonthConfig {
 
 #[cfg(test)]
 mod tests_sort {
-    use crate::cfg_month::MonthConfig;
+    use crate::months::month::Month;
 
     #[test]
     fn test_month_config_vector_sort() {
         let mut unsorted = vec!(
-            MonthConfig::new(4, 2023),
-            MonthConfig::new(3, 2021),
-            MonthConfig::new(2, 2022),
-            MonthConfig::new(1, 2024),
+            Month::new(4, 2023),
+            Month::new(3, 2021),
+            Month::new(2, 2022),
+            Month::new(1, 2024),
         );
 
         unsorted.sort();
@@ -67,11 +67,11 @@ mod tests_sort {
 
 #[cfg(test)]
 mod tests_next {
-    use crate::cfg_month::MonthConfig;
+    use crate::months::month::Month;
 
     #[test]
     fn test_next_month1() {
-        let input = MonthConfig::new(1, 2020);
+        let input = Month::new(1, 2020);
         let output = input.next();
 
         assert_eq!(2, output.month);
@@ -80,7 +80,7 @@ mod tests_next {
 
     #[test]
     fn test_next_month6() {
-        let input = MonthConfig::new(6, 2020);
+        let input = Month::new(6, 2020);
         let output = input.next();
 
         assert_eq!(7, output.month);
@@ -89,7 +89,7 @@ mod tests_next {
 
     #[test]
     fn test_next_month12() {
-        let input = MonthConfig::new(12, 2020);
+        let input = Month::new(12, 2020);
         let output = input.next();
 
         assert_eq!(1, output.month);
@@ -99,11 +99,11 @@ mod tests_next {
 
 #[cfg(test)]
 mod tests_prev {
-    use crate::cfg_month::MonthConfig;
+    use crate::months::month::Month;
 
     #[test]
     fn test_prev_month1() {
-        let input = MonthConfig::new(1, 2020);
+        let input = Month::new(1, 2020);
         let output = input.prev();
 
         assert_eq!(12, output.month);
@@ -112,7 +112,7 @@ mod tests_prev {
 
     #[test]
     fn test_prev_month6() {
-        let input = MonthConfig::new(6, 2020);
+        let input = Month::new(6, 2020);
         let output = input.prev();
 
         assert_eq!(5, output.month);
@@ -121,7 +121,7 @@ mod tests_prev {
 
     #[test]
     fn test_prev_month12() {
-        let input = MonthConfig::new(12, 2020);
+        let input = Month::new(12, 2020);
         let output = input.prev();
 
         assert_eq!(11, output.month);
