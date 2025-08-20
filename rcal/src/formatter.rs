@@ -1,20 +1,19 @@
-use std::string::ToString;
-use chrono::{Datelike, NaiveDate};
-use crate::days::{calc_days_in_month};
-use crate::cfg_app::AppConfig;
-use crate::cfg_month::MonthConfig;
-use string_builder::Builder;
-use crate::cfg_chunk::{ChunkConfig, YearMode};
-use crate::cfg_chunk::YearMode::WithMonth;
 use crate::formatter::Position::{Center, Left, Right};
-use crate::months::month_display_name;
+use crate::state::application_state::ApplicationState;
+use crate::state::chunk::{Chunk, YearMode};
+use crate::time::days::calc_days_in_month;
+use crate::time::month::Month;
+use crate::time::name::month_display_name;
+use chrono::{Datelike, NaiveDate};
+use std::string::ToString;
+use string_builder::Builder;
 
 const BLANK_ROW: &str = "                     ";
 
-pub fn format_from_app_config(config: AppConfig) -> Vec<String> {
+pub fn format_from_app_config(app_state: ApplicationState) -> Vec<String> {
     let mut lines = vec![];
 
-    config.chunks
+    app_state.chunks
         .iter()
         .for_each(|chunk| format_chunk(chunk)
             .iter()
@@ -29,7 +28,7 @@ enum Position {
     Right,
 }
 
-fn format_chunk(chunk: &ChunkConfig) -> Vec<String> {
+fn format_chunk(chunk: &Chunk) -> Vec<String> {
     /* prepare output */
     let mut output = vec![];
 
@@ -64,21 +63,21 @@ fn format_chunk(chunk: &ChunkConfig) -> Vec<String> {
     output
 }
 
-fn format_month(month_config: &MonthConfig, chunk_config: &ChunkConfig, position: Position) -> Vec<String> {
+fn format_month(month: &Month, chunk: &Chunk, position: Position) -> Vec<String> {
     /* create initial variables */
-    let first_day: i32 = (NaiveDate::from_ymd_opt(month_config.year as i32, month_config.month as u32, 1).unwrap().weekday().num_days_from_sunday() + 1) as i32;
+    let first_day: i32 = (NaiveDate::from_ymd_opt(month.year as i32, month.month as u32, 1).unwrap().weekday().num_days_from_sunday() + 1) as i32;
     let mut next_index: i32 = 2 - first_day;
-    let max: i32 = calc_days_in_month(month_config.month as u32, month_config.year as i32) as i32;
-    let month_name = month_display_name(month_config, matches!(chunk_config.year_mode, WithMonth));
+    let max: i32 = calc_days_in_month(month.month as u32, month.year as i32) as i32;
+    let month_name = month_display_name(month, matches!(chunk.year_mode, YearMode::WithMonth));
 
     /* create output lines var, and add static lines to it */
     let mut lines = vec![];
     lines.push(BLANK_ROW.to_string());
 
     /* if we're on the center node and year config is own-line, add the year, centered */
-    if matches!(&chunk_config.year_mode, YearMode::OwnLine) {
+    if matches!(&chunk.year_mode, YearMode::OwnLine) {
         if matches!(position, Center) {
-            lines.push(format!("{:^21}", month_config.year))
+            lines.push(format!("{:^21}", month.year))
         } else {
             lines.push(BLANK_ROW.to_string());
         }
@@ -126,17 +125,17 @@ fn find_largest(left: &[String], center: &[String], right: &[String]) -> usize {
 
 #[cfg(test)]
 mod test {
-    use crate::cfg_app::AppConfig;
-    use crate::cfg_chunk::ChunkConfig;
-    use crate::cfg_chunk::YearMode::{OwnLine, WithMonth};
-    use crate::cfg_month::MonthConfig;
     use crate::formatter::format_from_app_config;
+    use crate::state::application_state::ApplicationState;
+    use crate::state::chunk::Chunk;
+    use crate::state::chunk::YearMode::{OwnLine, WithMonth};
+    use crate::time::month::Month;
 
     #[test]
     fn test_one_month() {
-        let app_config = AppConfig {
+        let app_config = ApplicationState {
             chunks: vec!(
-                ChunkConfig::one(MonthConfig::new(1, 2024), WithMonth)
+                Chunk::one(Month::new(1, 2024), WithMonth)
             )
         };
         let result = format_from_app_config(app_config);
@@ -154,11 +153,11 @@ mod test {
 
     #[test]
     fn test_two_months() {
-        let app_config = AppConfig {
+        let app_config = ApplicationState {
             chunks: vec!(
-                ChunkConfig::two(
-                    MonthConfig::new(2, 2024),
-                    MonthConfig::new(3, 2024),
+                Chunk::two(
+                    Month::new(2, 2024),
+                    Month::new(3, 2024),
                     WithMonth)
             )
         };
@@ -178,12 +177,12 @@ mod test {
 
     #[test]
     fn test_three_months() {
-        let app_config = AppConfig {
+        let app_config = ApplicationState {
             chunks: vec!(
-                ChunkConfig::three(
-                    MonthConfig::new(4, 2024),
-                    MonthConfig::new(5, 2024),
-                    MonthConfig::new(6, 2024),
+                Chunk::three(
+                    Month::new(4, 2024),
+                    Month::new(5, 2024),
+                    Month::new(6, 2024),
                     OwnLine)
             )
         };
@@ -204,14 +203,14 @@ mod test {
 
     #[test]
     fn test_four_months() {
-        let app_config = AppConfig {
+        let app_config = ApplicationState {
             chunks: vec!(
-                ChunkConfig::three(
-                    MonthConfig::new(7, 2024),
-                    MonthConfig::new(8, 2024),
-                    MonthConfig::new(9, 2024),
+                Chunk::three(
+                    Month::new(7, 2024),
+                    Month::new(8, 2024),
+                    Month::new(9, 2024),
                     OwnLine),
-                ChunkConfig::one(MonthConfig::new(10, 2024), WithMonth)
+                Chunk::one(Month::new(10, 2024), WithMonth)
             )
         };
         let result = format_from_app_config(app_config);
