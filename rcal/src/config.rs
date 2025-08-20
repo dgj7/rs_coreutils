@@ -89,16 +89,9 @@ impl Default for Config {
 
 impl Config {
     ///
-    /// Public constructor, accepting command-line [Args].
+    /// Public constructor to initialize from [Vector] of [String].
     ///
-    pub(crate) fn new(args: Args) -> Config {
-        Self::from_vector(&args.collect::<Vec<String>>())
-    }
-
-    ///
-    /// Helper function to initialize from [Vector] of [String].
-    ///
-    fn from_vector(args: &Vec<String>) -> Config {
+    pub(crate) fn new(args: &Vec<String>) -> Config {
         let mut config = Self::default();
 
         let mut prev_arg_month = false;
@@ -220,7 +213,7 @@ mod test {
             String::from("-b"),
         ];
 
-        let config: &Config = &Config::from_vector(&args);
+        let config: &Config = &Config::new(&args);
 
         assert_eq!(false, config.turn_off_highlight_today);
         assert_eq!(true, config.display_julian_calendar);
@@ -283,7 +276,7 @@ mod test {
     fn test_no_args() {
         let args: Vec<String> = Vec::new();
 
-        let config = Config::from_vector(&args);
+        let config = Config::new(&args);
 
         assert_eq!(false, config.turn_off_highlight_today);
         assert_eq!(false, config.display_julian_calendar);

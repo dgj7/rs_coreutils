@@ -5,7 +5,8 @@ Do not use this `rcal` program in lieu of `cal` under any circumstances.  This i
 
 ## Progress
 * [x] implement argument parsing, with config struct
-* [ ] implement `cal` functionality
+* [x] implement `cal` functionality
+* [ ] fix warnings, clippy lints
 * [ ] unit tests
 
 ---
