@@ -44,7 +44,7 @@ impl fmt::Display for Month {
 
 #[cfg(test)]
 mod tests_sort {
-    use crate::months::month::Month;
+    use crate::time::month::Month;
 
     #[test]
     fn test_month_config_vector_sort() {
@@ -67,7 +67,7 @@ mod tests_sort {
 
 #[cfg(test)]
 mod tests_next {
-    use crate::months::month::Month;
+    use crate::time::month::Month;
 
     #[test]
     fn test_next_month1() {
@@ -99,7 +99,7 @@ mod tests_next {
 
 #[cfg(test)]
 mod tests_prev {
-    use crate::months::month::Month;
+    use crate::time::month::Month;
 
     #[test]
     fn test_prev_month1() {

@@ -1,4 +1,4 @@
-use crate::months::month::Month;
+use crate::time::month::Month;
 
 const MONTH_DISPLAY_NAMES: [&str; 12] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const MONTH_FULL_ARGS: [&str; 12] = [    "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
@@ -36,8 +36,8 @@ pub fn month_arg_match(month_arg: &str) -> Option<i16> {
 
 #[cfg(test)]
 mod happy_path_tests {
-    use crate::months::month::Month;
-    use crate::months::name::month_display_name;
+    use crate::time::month::Month;
+    use crate::time::name::month_display_name;
 
     #[test]
     fn test_month_1() {
@@ -52,8 +52,8 @@ mod happy_path_tests {
 
 #[cfg(test)]
 mod panic_tests {
-    use crate::months::month::Month;
-    use crate::months::name::month_display_name;
+    use crate::time::month::Month;
+    use crate::time::name::month_display_name;
 
     #[test]
     #[should_panic]
