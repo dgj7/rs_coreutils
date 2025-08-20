@@ -1,18 +1,18 @@
 use chrono::Datelike;
-use crate::cfg_month::MonthConfig;
+use crate::time::month::Month;
 
 pub trait Today {
-    fn make_today(&self) -> MonthConfig;
+    fn make_today(&self) -> Month;
 }
 
 pub struct DefaultToday {}
 
 impl Today for DefaultToday {
-    fn make_today(&self) -> MonthConfig {
+    fn make_today(&self) -> Month {
         let current_date = chrono::Utc::now();
         let the_year = current_date.year() as i16;
         let the_month = current_date.month() as i16;
-        MonthConfig { year: the_year, month: the_month }
+        Month { year: the_year, month: the_month }
     }
 }
 
