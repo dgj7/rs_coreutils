@@ -1,24 +1,22 @@
-use std::collections::HashSet;
-use std::env::Args;
 use crate::config::Config;
-use crate::state::chunk::{Chunk, YearMode};
 use crate::state::chunk::YearMode::{NoDisplay, OwnLine, WithMonth};
-use crate::time::today::Today;
+use crate::state::chunk::{Chunk, YearMode};
 use crate::time::month::Month;
 use crate::time::name::month_arg_match;
+use crate::time::today::Today;
+use std::collections::HashSet;
 
 pub struct ApplicationState {
     pub chunks: Vec<Chunk>,
 }
 
 impl ApplicationState {
-    pub fn new(config: Config, today: &impl Today) -> ApplicationState {
-        // todo: make sure that no-arg (argc==1) is handled; previously there was if/else here
+    pub fn new(config: Config, today: &dyn Today) -> ApplicationState {
         ApplicationState { chunks: month_configs_to_chunk_configs(args_to_month_configs(config, today)) }
     }
 }
 
-fn args_to_month_configs(arguments: Config, today: &impl Today) -> Vec<Month> {
+fn args_to_month_configs(arguments: Config, today: &dyn Today) -> Vec<Month> {
     /* create storage */
     let mut months = vec![];
 
@@ -149,7 +147,7 @@ mod tests_month_configs_vector {
     #[test]
     fn test_no_args() {
         let mut input = Config::default();
-        
+
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(1, output.len());
@@ -161,7 +159,7 @@ mod tests_month_configs_vector {
     fn test_month_only() {
         let mut input = Config::default();
         input.month = Some("January".to_string());
-        
+
         args_to_month_configs(input, &TestOnlyToday{});
     }
 
@@ -169,7 +167,7 @@ mod tests_month_configs_vector {
     fn test_year_only() {
         let mut input = Config::default();
         input.year = Some(2022);
-        
+
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(12, output.len());
@@ -192,7 +190,7 @@ mod tests_month_configs_vector {
         let mut input = Config::default();
         input.year = Some(2024);
         input.month = Some("may".to_string());
-        
+
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(1, output.len());
@@ -203,7 +201,7 @@ mod tests_month_configs_vector {
     fn test_before_only() {
         let mut input = Config::default();
         input.before = Some(3);
-        
+
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(4, output.len());
@@ -217,7 +215,7 @@ mod tests_month_configs_vector {
     fn test_after_only() {
         let mut input = Config::default();
         input.after = Some(4);
-        
+
         let output = args_to_month_configs(input, &TestOnlyToday{});
 
         assert_eq!(5, output.len());

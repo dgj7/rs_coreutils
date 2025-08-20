@@ -94,71 +94,75 @@ impl Config {
     pub(crate) fn new(args: &Vec<String>) -> Config {
         let mut config = Self::default();
 
-        let mut prev_arg_month = false;
-        let mut prev_arg_country_code = false;
-        let mut prev_arg_year = false;
-        let mut prev_arg_months_add_after = false;
-        let mut prev_arg_months_add_before = false;
-        let mut prev_arg_debug_current_date = false;
-        let mut prev_arg_debug_highlighting = false;
-        let mut prev_arg_first_week_has_at_least_days = false;
+        if args.len() == 1 {
+            // todo: handle no args provided
+        } else {
+            let mut prev_arg_month = false;
+            let mut prev_arg_country_code = false;
+            let mut prev_arg_year = false;
+            let mut prev_arg_months_add_after = false;
+            let mut prev_arg_months_add_before = false;
+            let mut prev_arg_debug_current_date = false;
+            let mut prev_arg_debug_highlighting = false;
+            let mut prev_arg_first_week_has_at_least_days = false;
 
-        for (index, argument) in args.into_iter().skip(1).enumerate() {
-            if prev_arg_month {
-                prev_arg_month = false;
-                config.month = Some(argument.to_owned());
-            } else if prev_arg_country_code {
-                prev_arg_country_code = false;
-                config.country_code = Some(argument.to_owned());
-            } else if prev_arg_year {
-                prev_arg_year = false;
-                config.year_string = Some(argument.to_owned());
-                config.year = Some(argument.parse::<u16>().unwrap());
-            } else if prev_arg_months_add_after {
-                prev_arg_months_add_after = false;
-                config.months_add_after = Some(argument.to_owned());
-                config.after = Some(argument.parse::<usize>().unwrap());
-            } else if prev_arg_months_add_before {
-                prev_arg_months_add_before = false;
-                config.months_add_before = Some(argument.to_owned());
-                config.before = Some(argument.parse::<usize>().unwrap());
-            } else if prev_arg_debug_current_date {
-                prev_arg_debug_current_date = false;
-                config.debug_current_date = Some(argument.to_owned());
-            } else if prev_arg_debug_highlighting {
-                prev_arg_debug_highlighting = false;
-                config.debug_highlighting = Some(argument.to_owned());
-            } else if prev_arg_first_week_has_at_least_days {
-                prev_arg_first_week_has_at_least_days = false;
-                config.first_week_has_at_least_days = Some(argument.to_owned());
-            } else {
-                match argument.as_str() {
-                    "-h" => config.turn_off_highlight_today = true,
-                    "-J" => config.display_julian_calendar = true,
-                    "-e" => config.display_date_of_easter = true,
-                    "-j" => config.display_julian_days = true,
-                    "-o" => config.display_date_orthodox_easter = true,
-                    "-p" => config.print_country_codes = true,
-                    "-w" => config.print_number_of_week = true,
-                    "-3" => config.previous_current_next_month = true,
-                    "-1" => config.only_current_month = true,
-                    "-C" => config.cal_mode = true,
-                    "-M" => config.weeks_start_monday = true,
-                    "-S" => config.weeks_start_sunday = true,
-                    "-b" => config.use_old_style_format = true,
+            for (index, argument) in args.into_iter().skip(1).enumerate() {
+                if prev_arg_month {
+                    prev_arg_month = false;
+                    config.month = Some(argument.to_owned());
+                } else if prev_arg_country_code {
+                    prev_arg_country_code = false;
+                    config.country_code = Some(argument.to_owned());
+                } else if prev_arg_year {
+                    prev_arg_year = false;
+                    config.year_string = Some(argument.to_owned());
+                    config.year = Some(argument.parse::<u16>().unwrap());
+                } else if prev_arg_months_add_after {
+                    prev_arg_months_add_after = false;
+                    config.months_add_after = Some(argument.to_owned());
+                    config.after = Some(argument.parse::<usize>().unwrap());
+                } else if prev_arg_months_add_before {
+                    prev_arg_months_add_before = false;
+                    config.months_add_before = Some(argument.to_owned());
+                    config.before = Some(argument.parse::<usize>().unwrap());
+                } else if prev_arg_debug_current_date {
+                    prev_arg_debug_current_date = false;
+                    config.debug_current_date = Some(argument.to_owned());
+                } else if prev_arg_debug_highlighting {
+                    prev_arg_debug_highlighting = false;
+                    config.debug_highlighting = Some(argument.to_owned());
+                } else if prev_arg_first_week_has_at_least_days {
+                    prev_arg_first_week_has_at_least_days = false;
+                    config.first_week_has_at_least_days = Some(argument.to_owned());
+                } else {
+                    match argument.as_str() {
+                        "-h" => config.turn_off_highlight_today = true,
+                        "-J" => config.display_julian_calendar = true,
+                        "-e" => config.display_date_of_easter = true,
+                        "-j" => config.display_julian_days = true,
+                        "-o" => config.display_date_orthodox_easter = true,
+                        "-p" => config.print_country_codes = true,
+                        "-w" => config.print_number_of_week = true,
+                        "-3" => config.previous_current_next_month = true,
+                        "-1" => config.only_current_month = true,
+                        "-C" => config.cal_mode = true,
+                        "-M" => config.weeks_start_monday = true,
+                        "-S" => config.weeks_start_sunday = true,
+                        "-b" => config.use_old_style_format = true,
 
-                    "-m" => prev_arg_month = true,
-                    "-s" => prev_arg_country_code = true,
-                    "-y" => prev_arg_year = true,
-                    "-A" => prev_arg_months_add_after = true,
-                    "-B" => prev_arg_months_add_before = true,
-                    "-d" => prev_arg_debug_current_date = true,
-                    "-H" => prev_arg_debug_highlighting = true,
-                    "-W" => prev_arg_first_week_has_at_least_days = true,
+                        "-m" => prev_arg_month = true,
+                        "-s" => prev_arg_country_code = true,
+                        "-y" => prev_arg_year = true,
+                        "-A" => prev_arg_months_add_after = true,
+                        "-B" => prev_arg_months_add_before = true,
+                        "-d" => prev_arg_debug_current_date = true,
+                        "-H" => prev_arg_debug_highlighting = true,
+                        "-W" => prev_arg_first_week_has_at_least_days = true,
 
-                    _ => config
-                        .unrecognized
-                        .push(Unrecognized::new(index, argument.to_owned())),
+                        _ => config
+                            .unrecognized
+                            .push(Unrecognized::new(index, argument.to_owned())),
+                    }
                 }
             }
         }

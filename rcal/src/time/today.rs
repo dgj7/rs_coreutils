@@ -5,9 +5,27 @@ pub trait Today {
     fn make_today(&self) -> Month;
 }
 
-pub struct DefaultToday {}
+pub(crate) enum TodayFactory {
+    Actual,
+    Other { y: u16, m: u16 },
+}
 
-impl Today for DefaultToday {
+impl TodayFactory {
+    pub(crate) fn create(&self) -> Box<dyn Today> {
+        match self {
+            TodayFactory::Actual => {
+                Box::new(ActualToday {})
+            },
+            TodayFactory::Other { y, m } => {
+                Box::new(OtherToday { year: y.clone(), month: m.clone() })
+            }
+        }
+    }
+}
+
+pub struct ActualToday {}
+
+impl Today for ActualToday {
     fn make_today(&self) -> Month {
         let current_date = chrono::Utc::now();
         let the_year = current_date.year() as u16;
@@ -16,8 +34,13 @@ impl Today for DefaultToday {
     }
 }
 
-impl DefaultToday {
-    pub(crate) fn new() -> Self {
-        DefaultToday{}
+pub(crate) struct OtherToday {
+    pub(crate) year: u16,
+    pub(crate) month: u16,
+}
+
+impl Today for OtherToday {
+    fn make_today(&self) -> Month {
+        Month { year: self.year, month: self.month }
     }
 }

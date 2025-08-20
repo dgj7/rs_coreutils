@@ -2,7 +2,7 @@ extern crate alloc;
 
 use crate::config::Config;
 use crate::state::application_state::ApplicationState;
-use crate::time::today::DefaultToday;
+use crate::time::today::TodayFactory;
 
 mod config;
 mod time;
@@ -17,8 +17,8 @@ fn main() {
 
 pub fn cal(args: Vec<String>) -> Vec<String> {
     let config = Config::new(&args);
-    let today = DefaultToday::new();
-    let state = ApplicationState::new(config, &today);
+    let today = TodayFactory::Actual.create();
+    let state = ApplicationState::new(config, today.as_ref());
     formatter::format_from_app_config(state)
         .iter()
         .skip(1)
