@@ -32,15 +32,14 @@ pub(crate) struct Config {
     pub(crate) first_week_has_at_least_days: Option<String>,
 
     /* unrecognized arguments */
-    pub(crate) unrecognized: Vec<Unrecognized>,
+    pub(crate) unrecognized: Vec<UnrecognizedArgument>,
 }
 
 ///
 /// Storage for arguments that aren't immediately recognized.
 ///
 #[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
-#[allow(dead_code)] // todo: remove this after the fields are used
-pub(crate) struct Unrecognized {
+pub(crate) struct UnrecognizedArgument {
     pub(crate) index: usize,
     pub(crate) argument: Option<String>,
 }
@@ -154,7 +153,7 @@ impl Config {
 
                         _ => config
                             .unrecognized
-                            .push(Unrecognized::new(index, argument.to_owned())),
+                            .push(UnrecognizedArgument::new(index, argument.to_owned())),
                     }
                 }
             }
@@ -164,7 +163,7 @@ impl Config {
         config.unrecognized.sort();
 
         /* print contents */
-        config.unrecognized.iter().for_each(|u| println!("{:?}", u));
+        //config.unrecognized.iter().for_each(|u| println!("{:?}", u));
 
         /* the first argument, if unrecognized, is the year */
         if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
@@ -183,9 +182,9 @@ impl Config {
     }
 }
 
-impl Unrecognized {
-    fn new(idx: usize, arg: String) -> Unrecognized {
-        Unrecognized {
+impl UnrecognizedArgument {
+    fn new(idx: usize, arg: String) -> UnrecognizedArgument {
+        UnrecognizedArgument {
             index: idx,
             argument: Some(arg),
         }
