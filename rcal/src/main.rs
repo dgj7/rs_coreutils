@@ -1,7 +1,7 @@
 extern crate alloc;
 
 use crate::config::Config;
-use crate::state::application_state::ApplicationState;
+use crate::state::app_state::ApplicationState;
 use crate::time::today::TodayFactory;
 
 mod config;

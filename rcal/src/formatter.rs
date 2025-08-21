@@ -1,5 +1,5 @@
 use crate::formatter::Position::{Center, Left, Right};
-use crate::state::application_state::ApplicationState;
+use crate::state::app_state::ApplicationState;
 use crate::state::chunk::{Chunk, YearMode};
 use crate::time::days::calc_days_in_month;
 use crate::time::month::Month;
@@ -126,7 +126,7 @@ fn find_largest(left: &[String], center: &[String], right: &[String]) -> usize {
 #[cfg(test)]
 mod test {
     use crate::formatter::format_from_app_config;
-    use crate::state::application_state::ApplicationState;
+    use crate::state::app_state::ApplicationState;
     use crate::state::chunk::Chunk;
     use crate::state::chunk::YearMode::{OwnLine, WithMonth};
     use crate::time::month::Month;

@@ -133,7 +133,7 @@ mod tests_new_app_cfg {
 #[cfg(test)]
 mod tests_month_configs_vector {
     use crate::config::Config;
-    use crate::state::application_state::args_to_month_configs;
+    use crate::state::app_state::args_to_month_configs;
     use crate::time::month::Month;
     use crate::time::today::Today;
     struct TestOnlyToday {}
