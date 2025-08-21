@@ -24,17 +24,12 @@ pub(crate) struct Config {
     /* string fields read from command line */
     pub(crate) month: Option<String>,
     pub(crate) country_code: Option<String>,
-    pub(crate) year_string: Option<String>,
-    pub(crate) months_add_after: Option<String>,
-    pub(crate) months_add_before: Option<String>,
-    pub(crate) debug_current_date: Option<String>,
-    pub(crate) debug_highlighting: Option<String>,
-    pub(crate) first_week_has_at_least_days: Option<String>,
-
-    /* for compatibility with old app */
     pub(crate) year: Option<u16>,
     pub(crate) after: Option<usize>,
     pub(crate) before: Option<usize>,
+    pub(crate) debug_current_date: Option<String>,
+    pub(crate) debug_highlighting: Option<String>,
+    pub(crate) first_week_has_at_least_days: Option<String>,
 
     /* unrecognized arguments */
     pub(crate) unrecognized: Vec<Unrecognized>,
@@ -72,9 +67,6 @@ impl Default for Config {
 
             month: None,
             country_code: None,
-            year_string: None,       // todo: remove?
-            months_add_after: None,  // todo: remove?
-            months_add_before: None, // todo: remove?
             debug_current_date: None,
             debug_highlighting: None,
             first_week_has_at_least_days: None,
@@ -118,15 +110,12 @@ impl Config {
                     config.country_code = Some(argument.to_owned());
                 } else if prev_arg_year {
                     prev_arg_year = false;
-                    config.year_string = Some(argument.to_owned());
                     config.year = Some(argument.parse::<u16>().unwrap());
                 } else if prev_arg_months_add_after {
                     prev_arg_months_add_after = false;
-                    config.months_add_after = Some(argument.to_owned());
                     config.after = Some(argument.parse::<usize>().unwrap());
                 } else if prev_arg_months_add_before {
                     prev_arg_months_add_before = false;
-                    config.months_add_before = Some(argument.to_owned());
                     config.before = Some(argument.parse::<usize>().unwrap());
                 } else if prev_arg_debug_current_date {
                     prev_arg_debug_current_date = false;
@@ -239,8 +228,8 @@ mod test {
         assert_eq!("january", config.month.clone().unwrap());
         assert_eq!("uk", config.country_code.clone().unwrap());
         assert_eq!(2012, config.year.clone().unwrap());
-        assert_eq!("5", config.months_add_after.clone().unwrap());
-        assert_eq!("6", config.months_add_before.clone().unwrap());
+        assert_eq!(6, config.before.clone().unwrap());
+        assert_eq!(5, config.after.clone().unwrap());
         assert_eq!("2012-11", config.debug_current_date.clone().unwrap());
         assert_eq!("2002-06-08", config.debug_highlighting.clone().unwrap());
         assert_eq!("4", config.first_week_has_at_least_days.clone().unwrap());
@@ -264,15 +253,12 @@ mod test {
             use_old_style_format: true, \
             month: Some(\"january\"), \
             country_code: Some(\"uk\"), \
-            year_string: Some(\"2012\"), \
-            months_add_after: Some(\"5\"), \
-            months_add_before: Some(\"6\"), \
-            debug_current_date: Some(\"2012-11\"), \
-            debug_highlighting: Some(\"2002-06-08\"), \
-            first_week_has_at_least_days: Some(\"4\"), \
             year: Some(2012), \
             after: Some(5), \
             before: Some(6), \
+            debug_current_date: Some(\"2012-11\"), \
+            debug_highlighting: Some(\"2002-06-08\"), \
+            first_week_has_at_least_days: Some(\"4\"), \
             unrecognized: [] \
             }",
             format!("{:?}", config)
@@ -302,8 +288,8 @@ mod test {
         assert_eq!(None, config.month);
         assert_eq!(None, config.country_code);
         assert_eq!(None, config.year);
-        assert_eq!(None, config.months_add_after);
-        assert_eq!(None, config.months_add_before);
+        assert_eq!(None, config.before);
+        assert_eq!(None, config.after);
         assert_eq!(None, config.debug_current_date);
         assert_eq!(None, config.debug_highlighting);
         assert_eq!(None, config.first_week_has_at_least_days);
@@ -327,15 +313,12 @@ mod test {
             use_old_style_format: false, \
             month: None, \
             country_code: None, \
-            year_string: None, \
-            months_add_after: None, \
-            months_add_before: None, \
-            debug_current_date: None, \
-            debug_highlighting: None, \
-            first_week_has_at_least_days: None, \
             year: None, \
             after: None, \
             before: None, \
+            debug_current_date: None, \
+            debug_highlighting: None, \
+            first_week_has_at_least_days: None, \
             unrecognized: [] \
             }",
             format!("{:?}", config)
