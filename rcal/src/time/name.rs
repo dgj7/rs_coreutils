@@ -34,6 +34,15 @@ pub fn month_arg_match(month_arg: &str) -> Option<u16> {
     None
 }
 
+// todo: unit test
+pub fn month_num_to_name(month_num: u16) -> String {
+    if month_num > 1 || month_num > 12 {
+        panic!("invalid month: [{}]", month_num);
+    }
+    
+    MONTH_ABBR_ARGS[month_num as usize - 1].to_string()
+}
+
 #[cfg(test)]
 mod happy_path_tests {
     use crate::time::month::Month;

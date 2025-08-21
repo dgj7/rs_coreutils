@@ -1,4 +1,5 @@
-use std::env::Args;
+use crate::time::name::month_num_to_name;
+use crate::time::today::TodayFactory;
 
 ///
 /// Storage for the application configuration.
@@ -32,8 +33,8 @@ pub(crate) struct Config {
 
     /* for compatibility with old app */
     pub(crate) year: Option<u16>,
-    pub(crate) before: Option<usize>,
     pub(crate) after: Option<usize>,
+    pub(crate) before: Option<usize>,
 
     /* unrecognized arguments */
     pub(crate) unrecognized: Vec<Unrecognized>,
@@ -79,8 +80,8 @@ impl Default for Config {
             first_week_has_at_least_days: None,
 
             year: None,
-            before: None,
             after: None,
+            before: None,
 
             unrecognized: vec![],
         }
@@ -95,7 +96,9 @@ impl Config {
         let mut config = Self::default();
 
         if args.len() == 1 {
-            // todo: handle no args provided
+            let today = TodayFactory::Actual.create().make_today();
+            config.month = Option::from(month_num_to_name(today.month));
+            config.year = Option::from(today.year);
         } else {
             let mut prev_arg_month = false;
             let mut prev_arg_country_code = false;
@@ -268,8 +271,8 @@ mod test {
             debug_highlighting: Some(\"2002-06-08\"), \
             first_week_has_at_least_days: Some(\"4\"), \
             year: Some(2012), \
-            before: Some(6), \
             after: Some(5), \
+            before: Some(6), \
             unrecognized: [] \
             }",
             format!("{:?}", config)
@@ -331,8 +334,8 @@ mod test {
             debug_highlighting: None, \
             first_week_has_at_least_days: None, \
             year: None, \
-            before: None, \
             after: None, \
+            before: None, \
             unrecognized: [] \
             }",
             format!("{:?}", config)

@@ -146,7 +146,7 @@ mod tests_month_configs_vector {
 
     #[test]
     fn test_no_args() {
-        let mut input = Config::default();
+        let input = Config::default();
 
         let output = args_to_month_configs(input, &TestOnlyToday{});
 

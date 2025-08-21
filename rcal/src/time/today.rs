@@ -5,6 +5,7 @@ pub trait Today {
     fn make_today(&self) -> Month;
 }
 
+#[allow(dead_code)]
 pub(crate) enum TodayFactory {
     Actual,
     Other { y: u16, m: u16 },
