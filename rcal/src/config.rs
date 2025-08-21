@@ -38,7 +38,7 @@ pub(crate) struct Config {
 ///
 /// Storage for arguments that aren't immediately recognized.
 ///
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
 #[allow(dead_code)] // todo: remove this after the fields are used
 pub(crate) struct Unrecognized {
     pub(crate) index: usize,
@@ -87,6 +87,7 @@ impl Config {
     pub(crate) fn new(args: &Vec<String>) -> Config {
         let mut config = Self::default();
 
+        /* initial handling of arguments */
         if args.len() == 1 {
             let today = TodayFactory::Actual.create().make_today();
             config.month = Option::from(month_num_to_name(today.month));
@@ -159,6 +160,25 @@ impl Config {
             }
         }
 
+        /* sort unrecognized, just in case */
+        config.unrecognized.sort();
+
+        /* print contents */
+        config.unrecognized.iter().for_each(|u| println!("{:?}", u));
+
+        /* the first argument, if unrecognized, is the year */
+        if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
+            let ua = config.unrecognized.remove(pos);
+            config.year = ua.argument.expect("argument missing").parse::<u16>().ok()
+        }
+
+        /* the second argument, if unrecognized, is the month */
+        if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 2) {
+            let ua = config.unrecognized.remove(pos);
+            config.month = ua.argument;
+        }
+
+        /* done */
         config
     }
 }
