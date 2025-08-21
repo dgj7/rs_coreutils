@@ -1,3 +1,4 @@
+use crate::config::KnownError;
 use crate::formatter::Position::{Center, Left, Right};
 use crate::state::app_state::ApplicationState;
 use crate::state::chunk::{Chunk, YearMode};
@@ -10,14 +11,16 @@ use string_builder::Builder;
 
 const BLANK_ROW: &str = "                     ";
 
-pub fn format_from_app_config(app_state: ApplicationState) -> Vec<String> {
+pub fn format_calendar(errors: &Vec<KnownError>, app_state: ApplicationState) -> Vec<String> {
     let mut lines = vec![];
-
-    app_state.chunks
-        .iter()
-        .for_each(|chunk| format_chunk(chunk)
+    
+    if errors.is_empty() {
+        app_state.chunks
             .iter()
-            .for_each(|line| lines.push(line.to_owned())));
+            .for_each(|chunk| format_chunk(chunk)
+                .iter()
+                .for_each(|line| lines.push(line.to_owned())));
+    }
 
     lines
 }
@@ -125,7 +128,7 @@ fn find_largest(left: &[String], center: &[String], right: &[String]) -> usize {
 
 #[cfg(test)]
 mod test {
-    use crate::formatter::format_from_app_config;
+    use crate::formatter::format_calendar;
     use crate::state::app_state::ApplicationState;
     use crate::state::chunk::Chunk;
     use crate::state::chunk::YearMode::{OwnLine, WithMonth};
@@ -138,7 +141,7 @@ mod test {
                 Chunk::one(Month::new(1, 2024), WithMonth)
             )
         };
-        let result = format_from_app_config(app_config);
+        let result = format_calendar(&vec!(), app_config);
 
         assert_eq!(8, result.len());
         assert_eq!("                                                                 ", result.get(0).unwrap());
@@ -161,7 +164,7 @@ mod test {
                     WithMonth)
             )
         };
-        let result = format_from_app_config(app_config);
+        let result = format_calendar(&vec!(), app_config);
 
         assert_eq!(9, result.len());
         assert_eq!("                                                                 ", result.get(0).unwrap());
@@ -186,7 +189,7 @@ mod test {
                     OwnLine)
             )
         };
-        let result = format_from_app_config(app_config);
+        let result = format_calendar(&vec!(), app_config);
 
         assert_eq!(10, result.len());
         assert_eq!("                                                                 ", result.get(0).unwrap());
@@ -213,7 +216,7 @@ mod test {
                 Chunk::one(Month::new(10, 2024), WithMonth)
             )
         };
-        let result = format_from_app_config(app_config);
+        let result = format_calendar(&vec!(), app_config);
 
         assert_eq!(17, result.len());
         assert_eq!("                                                                 ", result.get(0).unwrap());

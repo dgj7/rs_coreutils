@@ -33,6 +33,7 @@ pub(crate) struct Config {
 
     /* unrecognized arguments */
     pub(crate) unrecognized: Vec<UnrecognizedArgument>,
+    pub(crate) errors: Vec<KnownError>,
 }
 
 ///
@@ -42,6 +43,15 @@ pub(crate) struct Config {
 pub(crate) struct UnrecognizedArgument {
     pub(crate) index: usize,
     pub(crate) argument: Option<String>,
+}
+
+///
+/// Storage for expected errors.
+///
+#[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
+pub(crate) struct KnownError {
+    pub(crate) code: i32,
+    pub(crate) message: Option<String>,
 }
 
 impl Default for Config {
@@ -75,6 +85,7 @@ impl Default for Config {
             before: None,
 
             unrecognized: vec![],
+            errors: vec![],
         }
     }
 }
@@ -101,7 +112,11 @@ impl Config {
             let mut prev_arg_debug_highlighting = false;
             let mut prev_arg_first_week_has_at_least_days = false;
 
-            for (index, argument) in args.into_iter().skip(1).enumerate() {
+            for (index, argument) in args.into_iter().enumerate() {
+                if index == 0 {
+                    continue;
+                }
+
                 if prev_arg_month {
                     prev_arg_month = false;
                     config.month = Some(argument.to_owned());
@@ -168,7 +183,15 @@ impl Config {
         /* the first argument, if unrecognized, is the year */
         if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
             let ua = config.unrecognized.remove(pos);
-            config.year = ua.argument.expect("argument missing").parse::<u16>().ok()
+            let temp_year = ua.argument.expect("argument missing");
+
+            if let Ok(year) = temp_year.parse::<u16>() {
+                config.year = Some(year);
+            } else {
+                config
+                    .errors
+                    .push(KnownError{ code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
+            }
         }
 
         /* the second argument, if unrecognized, is the month */
@@ -278,7 +301,8 @@ mod test {
             debug_current_date: Some(\"2012-11\"), \
             debug_highlighting: Some(\"2002-06-08\"), \
             first_week_has_at_least_days: Some(\"4\"), \
-            unrecognized: [] \
+            unrecognized: [], \
+            errors: [] \
             }",
             format!("{:?}", config)
         );
@@ -338,7 +362,8 @@ mod test {
             debug_current_date: None, \
             debug_highlighting: None, \
             first_week_has_at_least_days: None, \
-            unrecognized: [] \
+            unrecognized: [], \
+            errors: [] \
             }",
             format!("{:?}", config)
         );
