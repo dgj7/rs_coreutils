@@ -137,12 +137,7 @@ mod flag_tests {
 
     #[test]
     fn test_year_and_before() {
-        let args = vec!(
-            String::from(""),
-            String::from("1986"),
-            String::from("-B"),
-            String::from("3")
-        );
+        let args = "exe 1986 -B 3".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
         let result = cal(args);
 
@@ -202,13 +197,7 @@ mod flag_tests {
 
     #[test]
     fn test_month_year_and_before() {
-        let args = vec!(
-            String::from(""),
-            String::from("feb"),
-            String::from("1987"),
-            String::from("-B"),
-            String::from("3"),
-        );
+        let args = "exe feb 1987 -B 3".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
         let result = cal(args);
 
@@ -237,13 +226,7 @@ mod flag_tests {
 
     #[test]
     fn test_year_month_and_after() {
-        let args = vec!(
-            String::from(""),
-            String::from("nov"),
-            String::from("1987"),
-            String::from("-A"),
-            String::from("4")
-        );
+        let args = "exe nov 1987 -A 4".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
         let result = cal(args);
 
@@ -270,6 +253,47 @@ mod flag_tests {
         assert_eq!(" 21 22 23 24 25 26 27  20 21 22 23 24 25 26                      ", lines[15]);
         assert_eq!(" 28 29                 27 28 29 30 31                            ", lines[16]);
     }
+
+    #[test]
+    fn test_year_month_before_and_after() {
+        let args = "exe jun 2002 -B 3 -A 4".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
+
+        let result = cal(args);
+
+        assert_eq!(true, result.is_ok());
+        let lines = result.unwrap();
+
+        assert_eq!(28, lines.len());
+
+        assert_eq!("                              2002                               ", lines[0]);
+        assert_eq!("        March                 April                  May         ", lines[1]);
+        assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa", lines[2]);
+        assert_eq!("                 1  2      1  2  3  4  5  6            1  2  3  4", lines[3]);
+        assert_eq!("  3  4  5  6  7  8  9   7  8  9 10 11 12 13   5  6  7  8  9 10 11", lines[4]);
+        assert_eq!(" 10 11 12 13 14 15 16  14 15 16 17 18 19 20  12 13 14 15 16 17 18", lines[5]);
+        assert_eq!(" 17 18 19 20 21 22 23  21 22 23 24 25 26 27  19 20 21 22 23 24 25", lines[6]);
+        assert_eq!(" 24 25 26 27 28 29 30  28 29 30              26 27 28 29 30 31   ", lines[7]);
+        assert_eq!(" 31                                                              ", lines[8]);
+        assert_eq!("                                                                 ", lines[9]);
+        assert_eq!("                              2002                               ", lines[10]);
+        assert_eq!("        June                  July                 August        ", lines[11]);
+        assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa", lines[12]);
+        assert_eq!("                    1      1  2  3  4  5  6               1  2  3", lines[13]);
+        assert_eq!("  2  3  4  5  6  7  8   7  8  9 10 11 12 13   4  5  6  7  8  9 10", lines[14]);
+        assert_eq!("  9 10 11 12 13 14 15  14 15 16 17 18 19 20  11 12 13 14 15 16 17", lines[15]);
+        assert_eq!(" 16 17 18 19 20 21 22  21 22 23 24 25 26 27  18 19 20 21 22 23 24", lines[16]);
+        assert_eq!(" 23 24 25 26 27 28 29  28 29 30 31           25 26 27 28 29 30 31", lines[17]);
+        assert_eq!(" 30                                                              ", lines[18]);
+        assert_eq!("                                                                 ", lines[19]);
+        assert_eq!("                              2002                               ", lines[20]);
+        assert_eq!("      September              October                             ", lines[21]);
+        assert_eq!(" Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa                      ", lines[22]);
+        assert_eq!("  1  2  3  4  5  6  7         1  2  3  4  5                      ", lines[23]);
+        assert_eq!("  8  9 10 11 12 13 14   6  7  8  9 10 11 12                      ", lines[24]);
+        assert_eq!(" 15 16 17 18 19 20 21  13 14 15 16 17 18 19                      ", lines[25]);
+        assert_eq!(" 22 23 24 25 26 27 28  20 21 22 23 24 25 26                      ", lines[26]);
+        assert_eq!(" 29 30                 27 28 29 30 31                            ", lines[27]);
+    }
 }
 
 #[cfg(test)]
@@ -278,10 +302,7 @@ mod error_tests {
 
     #[test]
     fn test_no_flags_month_only() {
-        let args = vec!(
-            String::from(""),
-            String::from("jan")
-        );
+        let args = "exe jan".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
         let result = cal(args);
 
@@ -294,11 +315,7 @@ mod error_tests {
 
     #[test]
     fn no_flags_year_and_month() {
-        let args = vec!(
-            String::from(""),
-            String::from("1985"),
-            String::from("mar"),
-        );
+        let args = "exe 1985 mar".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
         let result = cal(args);
 
@@ -312,13 +329,7 @@ mod error_tests {
 
     #[test]
     fn test_year_month_and_before() {
-        let args = vec!(
-            String::from(""),
-            String::from("1987"),
-            String::from("feb"),
-            String::from("-B"),
-            String::from("3")
-        );
+        let args = "exe 1987 feb -B 3".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
         let result = cal(args);
 
