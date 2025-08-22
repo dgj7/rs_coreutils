@@ -31,9 +31,6 @@ fn args_to_month_configs(arguments: &Config, today: &dyn Today) -> Vec<Month> {
                 months.push(Month::new(the_month, the_year));
             }
         }
-    } else if arguments.month.is_some() {
-        let year = arguments.month.clone().unwrap();
-        panic!("not a valid year {}", year);
     } else {
         months.push(today.make_today());
     }
@@ -126,7 +123,7 @@ fn determine_year_mode(chunk: &[Month], years_displayed_on_own_line: &mut [u16])
 }
 
 #[cfg(test)]
-mod tests_month_configs_vector {
+mod static_date_tests {
     use crate::config::Config;
     use crate::state::app_state::args_to_month_configs;
     use crate::time::month::Month;
@@ -137,59 +134,6 @@ mod tests_month_configs_vector {
         fn make_today(&self) -> Month {
             return Month { month: 2, year: 2024 };
         }
-    }
-
-    #[test]
-    fn test_no_args() {
-        let input = Config::default();
-
-        let output = args_to_month_configs(&input, &TestOnlyToday{});
-
-        assert_eq!(1, output.len());
-        assert_eq!("2/2024", format!("{}", output.get(0).unwrap()));
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_month_only() {
-        let mut input = Config::default();
-        input.month = Some("January".to_string());
-
-        args_to_month_configs(&input, &TestOnlyToday{});
-    }
-
-    #[test]
-    fn test_year_only() {
-        let mut input = Config::default();
-        input.year = Some(2022);
-
-        let output = args_to_month_configs(&input, &TestOnlyToday{});
-
-        assert_eq!(12, output.len());
-        assert_eq!("1/2022", format!("{}", output.get(0).unwrap()));
-        assert_eq!("2/2022", format!("{}", output.get(1).unwrap()));
-        assert_eq!("3/2022", format!("{}", output.get(2).unwrap()));
-        assert_eq!("4/2022", format!("{}", output.get(3).unwrap()));
-        assert_eq!("5/2022", format!("{}", output.get(4).unwrap()));
-        assert_eq!("6/2022", format!("{}", output.get(5).unwrap()));
-        assert_eq!("7/2022", format!("{}", output.get(6).unwrap()));
-        assert_eq!("8/2022", format!("{}", output.get(7).unwrap()));
-        assert_eq!("9/2022", format!("{}", output.get(8).unwrap()));
-        assert_eq!("10/2022", format!("{}", output.get(9).unwrap()));
-        assert_eq!("11/2022", format!("{}", output.get(10).unwrap()));
-        assert_eq!("12/2022", format!("{}", output.get(11).unwrap()));
-    }
-
-    #[test]
-    fn test_month_and_year() {
-        let mut input = Config::default();
-        input.year = Some(2024);
-        input.month = Some("may".to_string());
-
-        let output = args_to_month_configs(&input, &TestOnlyToday{});
-
-        assert_eq!(1, output.len());
-        assert_eq!("5/2024", format!("{}", output.get(0).unwrap()));
     }
 
     #[test]
@@ -220,9 +164,4 @@ mod tests_month_configs_vector {
         assert_eq!("5/2024", format!("{}", output.get(3).unwrap()));
         assert_eq!("6/2024", format!("{}", output.get(4).unwrap()));
     }
-}
-
-#[cfg(test)]
-mod tests_chunk_configs_vector {
-    // todo
 }

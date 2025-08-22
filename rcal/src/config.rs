@@ -180,25 +180,40 @@ impl Config {
         /* print contents */
         //config.unrecognized.iter().for_each(|u| println!("{:?}", u));
 
-        /* the first argument, if unrecognized, is the year */
-        if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
-            let ua = config.unrecognized.remove(pos);
-            let temp_year = ua.argument.expect("argument missing");
+        /* deal with unrecognized args */
+        if config.unrecognized.len() == 1 {/* 1 arg: year */
+            if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
+                let ua = config.unrecognized.remove(pos);
+                let temp_year = ua.argument.expect("argument missing");
 
-            if let Ok(year) = temp_year.parse::<u16>() {
-                config.year = Some(year);
-            } else {
-                config
-                    .errors
-                    .push(KnownError{ code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
+                if let Ok(year) = temp_year.parse::<u16>() {
+                    config.year = Some(year);
+                } else {
+                    config
+                        .errors
+                        .push(KnownError{ code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
+                }
+            }
+        } else if config.unrecognized.len() == 2 {/* 2 args: month year */
+            if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
+                let ua = config.unrecognized.remove(pos);
+                config.month = ua.argument;
+            }
+
+            if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 2) {
+                let ua = config.unrecognized.remove(pos);
+                let temp_year = ua.argument.expect("argument missing");
+
+                if let Ok(year) = temp_year.parse::<u16>() {
+                    config.year = Some(year);
+                } else {
+                    config
+                        .errors
+                        .push(KnownError{ code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
+                }
             }
         }
 
-        /* the second argument, if unrecognized, is the month */
-        if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 2) {
-            let ua = config.unrecognized.remove(pos);
-            config.month = ua.argument;
-        }
 
         /* done */
         config
