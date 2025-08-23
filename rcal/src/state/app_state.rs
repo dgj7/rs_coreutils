@@ -12,11 +12,11 @@ pub struct ApplicationState {
 
 impl ApplicationState {
     pub fn new(config: &Config, today: &dyn Today) -> ApplicationState {
-        ApplicationState { chunks: month_configs_to_chunk_configs(args_to_month_configs(config, today)) }
+        ApplicationState { chunks: months_to_chunks(determine_months(config, today)) }
     }
 }
 
-fn args_to_month_configs(arguments: &Config, today: &dyn Today) -> Vec<Month> {
+fn determine_months(arguments: &Config, today: &dyn Today) -> Vec<Month> {
     /* create storage */
     let mut months = vec![];
 
@@ -71,7 +71,7 @@ fn args_to_month_configs(arguments: &Config, today: &dyn Today) -> Vec<Month> {
     months
 }
 
-fn month_configs_to_chunk_configs(month_configs: Vec<Month>) -> Vec<Chunk> {
+fn months_to_chunks(month_configs: Vec<Month>) -> Vec<Chunk> {
     /* create storage */
     let mut chunks = vec![];
     let mut years_displayed_on_own_line = vec![];
@@ -80,18 +80,18 @@ fn month_configs_to_chunk_configs(month_configs: Vec<Month>) -> Vec<Chunk> {
     for chunk in month_configs.chunks(3) {
         let chunk_config = if chunk.len() == 1 {
             let left = *chunk.first().unwrap();
-            let year_mode = determine_year_mode(chunk, &mut years_displayed_on_own_line);
+            let year_mode = determine_year_display_mode(chunk, &mut years_displayed_on_own_line);
             Chunk::one(left, year_mode)
         } else if chunk.len() == 2 {
             let left = *chunk.first().unwrap();
             let center = *chunk.get(1).unwrap();
-            let year_mode = determine_year_mode(chunk, &mut years_displayed_on_own_line);
+            let year_mode = determine_year_display_mode(chunk, &mut years_displayed_on_own_line);
             Chunk::two(left, center, year_mode)
         } else {
             let left = *chunk.first().unwrap();
             let center = *chunk.get(1).unwrap();
             let right = *chunk.get(2).unwrap();
-            let year_mode = determine_year_mode(chunk, &mut years_displayed_on_own_line);
+            let year_mode = determine_year_display_mode(chunk, &mut years_displayed_on_own_line);
             Chunk::three(left, center, right, year_mode)
         };
         chunks.push(chunk_config);
@@ -101,7 +101,7 @@ fn month_configs_to_chunk_configs(month_configs: Vec<Month>) -> Vec<Chunk> {
     chunks
 }
 
-fn determine_year_mode(chunk: &[Month], years_displayed_on_own_line: &mut [u16]) -> YearMode {
+fn determine_year_display_mode(chunk: &[Month], years_displayed_on_own_line: &mut [u16]) -> YearMode {
     let years_in_current_chunk: HashSet<u16> = chunk.iter()
         .map(|c| c.year)
         .collect();
@@ -125,7 +125,7 @@ fn determine_year_mode(chunk: &[Month], years_displayed_on_own_line: &mut [u16])
 #[cfg(test)]
 mod static_date_tests {
     use crate::config::Config;
-    use crate::state::app_state::args_to_month_configs;
+    use crate::state::app_state::determine_months;
     use crate::time::month::Month;
     use crate::time::today::Today;
     struct TestOnlyToday {}
@@ -141,7 +141,7 @@ mod static_date_tests {
         let mut input = Config::default();
         input.before = Some(3);
 
-        let output = args_to_month_configs(&input, &TestOnlyToday{});
+        let output = determine_months(&input, &TestOnlyToday{});
 
         assert_eq!(4, output.len());
         assert_eq!("11/2023", format!("{}", output.get(0).unwrap()));
@@ -155,7 +155,7 @@ mod static_date_tests {
         let mut input = Config::default();
         input.after = Some(4);
 
-        let output = args_to_month_configs(&input, &TestOnlyToday{});
+        let output = determine_months(&input, &TestOnlyToday{});
 
         assert_eq!(5, output.len());
         assert_eq!("2/2024", format!("{}", output.get(0).unwrap()));
