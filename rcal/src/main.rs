@@ -8,6 +8,7 @@ mod time;
 mod state;
 mod formatter;
 mod cal;
+mod input;
 
 fn main() {
     let args = std::env::args();
