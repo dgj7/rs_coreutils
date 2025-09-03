@@ -1,0 +1,22 @@
+name: rcal
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test
+      run: cargo test --verbose
+      working-directory: ./rcal
+    - name: Build
+      run: cargo build --examples --verbose
+      working-directory: ./rcal
