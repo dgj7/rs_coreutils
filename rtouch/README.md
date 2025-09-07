@@ -9,7 +9,10 @@ Do not use this `rtouch` program in lieu of `touch` under any circumstances.  Th
 * [ ] unit tests
 
 ---
-from `man touch`:
+
+<details>
+<summary>man touch</summary>
+
 ```
 TOUCH(1)                                            User Commands                                            TOUCH(1)
 
@@ -88,5 +91,6 @@ SEE ALSO
 
 GNU coreutils 8.32                                  September 2020                                           TOUCH(1)
 ```
+</details>
 ---
 [Go Back](..)
