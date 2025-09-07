@@ -2,9 +2,11 @@ name: rtouch
 
 on:
   push:
-    branches: [ "main" ]
+    paths:
+    - rtouch/**
   pull_request:
-    branches: [ "main" ]
+    paths:
+    - rtouch/**
 
 env:
   CARGO_TERM_COLOR: always

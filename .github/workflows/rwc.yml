@@ -2,9 +2,11 @@ name: rwc
 
 on:
   push:
-    branches: [ "main" ]
+    paths:
+    - rwc/**
   pull_request:
-    branches: [ "main" ]
+    paths:
+    - rwc/**
 
 env:
   CARGO_TERM_COLOR: always

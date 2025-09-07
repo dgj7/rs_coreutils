@@ -2,9 +2,11 @@ name: rcal
 
 on:
   push:
-    branches: [ "main" ]
+    paths:
+    - rcal/**
   pull_request:
-    branches: [ "main" ]
+    paths:
+    - rcal/**
 
 env:
   CARGO_TERM_COLOR: always
