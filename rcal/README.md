@@ -12,7 +12,7 @@ Do not use this `rcal` program in lieu of `cal` under any circumstances.  This i
 
 ---
 <details>
-<summary>from `man cal`:</summary>
+<summary>cal manpages</summary>
 
 ```
 NAME

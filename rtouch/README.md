@@ -11,7 +11,7 @@ Do not use this `rtouch` program in lieu of `touch` under any circumstances.  Th
 ---
 
 <details>
-<summary>man touch</summary>
+<summary>touch manpages</summary>
 
 ```
 TOUCH(1)                                            User Commands                                            TOUCH(1)
