@@ -11,7 +11,9 @@ Note that, as of `v1.0.2`, `rwc` doesn't yet return the same values as `wc`.
 * [ ] unit tests
 
 ---
-from `man wc`:
+<details>
+<summary>wc manpages</summary>
+
 ```
 NAME
        wc - print newline, word, and byte counts for each file
@@ -68,5 +70,7 @@ SEE ALSO
        Full documentation <https://www.gnu.org/software/coreutils/wc>
        or available locally via: info '(coreutils) wc invocation'
 ```
+</details>
+
 ---
 [Go Back](..)
