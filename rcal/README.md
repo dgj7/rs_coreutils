@@ -13,6 +13,7 @@ Do not use this `rcal` program in lieu of `cal` under any circumstances.  This i
 ---
 <details>
 <summary>from `man cal`:</summary>
+
 ```
 NAME
      cal, ncal — displays a calendar and the date of Easter
@@ -129,5 +130,6 @@ BUGS
      It is not possible to display Monday as the first day of the week with cal.
 ```
 </details>
+
 ---
 [Go Back](..)
