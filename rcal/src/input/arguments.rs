@@ -1,6 +1,6 @@
 use common::input::known_error::KnownError;
 use crate::input::command::{BooleanCommand, CommandDefinition, YearCommand, StringCommand, CountCommand};
-use crate::input::unrecognized::UnrecognizedArgument;
+use common::input::unrecognized::UnrecognizedArgument;
 use crate::time::name::month_num_to_name;
 use crate::time::today::TodayFactory;
 
