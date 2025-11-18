@@ -1,3 +1,5 @@
+use crate::input::known_error::KnownError;
+use crate::input::unrecognized::UnrecognizedArgument;
 use crate::time::name::month_num_to_name;
 use crate::time::today::TodayFactory;
 
@@ -34,24 +36,6 @@ pub(crate) struct Config {
     /* unrecognized arguments */
     pub(crate) unrecognized: Vec<UnrecognizedArgument>,
     pub(crate) errors: Vec<KnownError>,
-}
-
-///
-/// Storage for arguments that aren't immediately recognized.
-///
-#[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
-pub(crate) struct UnrecognizedArgument {
-    pub(crate) index: usize,
-    pub(crate) argument: Option<String>,
-}
-
-///
-/// Storage for expected errors.
-///
-#[derive(Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
-pub(crate) struct KnownError {
-    pub(crate) code: i32,
-    pub(crate) message: Option<String>,
 }
 
 impl Default for Config {

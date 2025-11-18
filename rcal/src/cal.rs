@@ -1,5 +1,6 @@
-use crate::config::{Config, KnownError};
+use crate::config::{Config};
 use crate::formatter;
+use crate::input::known_error::KnownError;
 use crate::state::app_state::ApplicationState;
 use crate::time::today::TodayFactory;
 

@@ -1,4 +1,3 @@
-use crate::config::KnownError;
 use crate::formatter::Position::{Center, Left, Right};
 use crate::state::app_state::ApplicationState;
 use crate::state::chunk::{Chunk, YearMode};
@@ -8,6 +7,7 @@ use crate::time::name::month_display_name;
 use chrono::{Datelike, NaiveDate};
 use std::string::ToString;
 use string_builder::Builder;
+use crate::input::known_error::KnownError;
 
 const BLANK_ROW: &str = "                     ";
 
