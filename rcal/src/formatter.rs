@@ -7,7 +7,7 @@ use crate::time::name::month_display_name;
 use chrono::{Datelike, NaiveDate};
 use std::string::ToString;
 use string_builder::Builder;
-use crate::input::known_error::KnownError;
+use common::input::known_error::KnownError;
 
 const BLANK_ROW: &str = "                     ";
 
