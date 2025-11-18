@@ -165,7 +165,8 @@ impl Config {
         //config.unrecognized.iter().for_each(|u| println!("{:?}", u));
 
         /* deal with unrecognized args */
-        if config.unrecognized.len() == 1 {/* 1 arg: year */
+        if config.unrecognized.len() == 1 {
+            /* 1 arg: year */
             if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
                 let ua = config.unrecognized.remove(pos);
                 let temp_year = ua.argument.expect("argument missing");
@@ -175,10 +176,11 @@ impl Config {
                 } else {
                     config
                         .errors
-                        .push(KnownError{ code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
+                        .push(KnownError { code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
                 }
             }
-        } else if config.unrecognized.len() == 2 {/* 2 args: month year */
+        } else if config.unrecognized.len() == 2 {
+            /* 2 args: month year */
             if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
                 let ua = config.unrecognized.remove(pos);
                 config.month = ua.argument;
@@ -193,7 +195,7 @@ impl Config {
                 } else {
                     config
                         .errors
-                        .push(KnownError{ code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
+                        .push(KnownError { code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
                 }
             }
         }
@@ -201,15 +203,6 @@ impl Config {
 
         /* done */
         config
-    }
-}
-
-impl UnrecognizedArgument {
-    fn new(idx: usize, arg: String) -> UnrecognizedArgument {
-        UnrecognizedArgument {
-            index: idx,
-            argument: Some(arg),
-        }
     }
 }
 
