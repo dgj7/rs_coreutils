@@ -5,13 +5,14 @@ Do not use this `rcal` program in lieu of `cal` under any circumstances.  This i
 
 ## Progress
 
-| Status             | Feature                              |
-|--------------------|--------------------------------------|
-| :heavy_check_mark: | argument parsing, with config struct |
-| :heavy_check_mark: | _core_ `cal` functionality           |
-| :x:                | remaining cal flags; see table below |
-| :x:                | fix warnings (clippy)                |
-| :x:                | full unit test suite                 |
+| Status             | Feature                                |
+|--------------------|----------------------------------------|
+| :heavy_check_mark: | argument parsing, with config struct   |
+| :x:                | arg parsing: multiple flags in one arg |
+| :heavy_check_mark: | _core_ `cal` functionality             |
+| :x:                | remaining cal flags; see table below   |
+| :x:                | fix warnings (clippy)                  |
+| :x:                | full unit test suite                   |
 
 
 | Status             | Feature         | Detail                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
