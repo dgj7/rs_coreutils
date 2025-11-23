@@ -4,9 +4,27 @@
 Do not use this `rtouch` program in lieu of `touch` under any circumstances.  This is not a suitable replacement.
 
 ## Progress
-* [x] implement argument parsing, with `Config` struct
-* [x] implement `touch` functionality
-* [ ] unit tests
+
+| Status             | Feature                                          |
+|--------------------|--------------------------------------------------|
+| :heavy_check_mark: | implement argument parsing, with `Config` struct |
+| :heavy_check_mark: | implement `touch` functionality                  |
+| :x:                | unit tests                                       |
+
+| Status | Feature              | Details                                                                                                                          |
+|--------|----------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| :x:    | -a                   | change only the access time                                                                                                      |
+| :x:    | -c, --no-create      | do not create any files                                                                                                          |
+| :x:    | -d, --date=STRING    | parse STRING and use it instead of current time                                                                                  |
+| :x:    | -f                   | (ignored)                                                                                                                        |
+| :x:    | -h, --no-dereference | affect each symbolic link instead of any referenced file (useful only on systems that  can  change  the timestamps of a symlink) |
+| :x:    | -m                   | change only the modification time                                                                                                |
+| :x:    | -r, --reference=FILE | use this file's times instead of current time                                                                                    |
+| :x:    | -t STAMP             | use [[CC]YY]MMDDhhmm[.ss] instead of current time                                                                                |
+| :x:    | --time=WORD          | change  the  specified  time:  WORD is access, atime, or use: equivalent to -a WORD is modify or mtime: equivalent to -m         |
+| :x:    | --help               | display this help and exit                                                                                                       |
+| :x:    | --version            | output version information and exit                                                                                              |
+
 
 ---
 
