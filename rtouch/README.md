@@ -8,7 +8,8 @@ Do not use this `rtouch` program in lieu of `touch` under any circumstances.  Th
 | Status             | Feature                                          |
 |--------------------|--------------------------------------------------|
 | :heavy_check_mark: | implement argument parsing, with `Config` struct |
-| :heavy_check_mark: | implement `touch` functionality                  |
+| :heavy_check_mark: | implement core `touch` functionality             |
+| :x:                | implement each flag; verify with tests           |
 | :x:                | unit tests                                       |
 
 | Status | Feature              | Details                                                                                                                          |
