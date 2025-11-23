@@ -1,7 +1,10 @@
-use common::input::known_error::KnownError;
-use common::input::unrecognized::UnrecognizedArgument;
 use crate::time::name::month_num_to_name;
 use crate::time::today::TodayFactory;
+use common::input::known_error::KnownError;
+use common::input::unrecognized::UnrecognizedArgument;
+
+const VALID_FLAGS: &str = "hJejopw31CMSb";
+const VALID_COMBINED_FLAGS: &str = "bhJjpwSM";
 
 ///
 /// Storage for the application configuration.
@@ -82,7 +85,7 @@ impl Config {
         let mut config = Self::default();
 
         /* initial handling of arguments */
-        if args.len() == 1 {
+        if args.len() == 1 && !args.first().unwrap().starts_with("-") {
             let today = TodayFactory::Actual.create().make_today();
             config.month = Option::from(month_num_to_name(today.month));
             config.year = Option::from(today.year);
@@ -127,20 +130,6 @@ impl Config {
                     config.first_week_has_at_least_days = Some(argument.to_owned());
                 } else {
                     match argument.as_str() {
-                        "-h" => config.turn_off_highlight_today = true,
-                        "-J" => config.display_julian_calendar = true,
-                        "-e" => config.display_date_of_easter = true,
-                        "-j" => config.display_julian_days = true,
-                        "-o" => config.display_date_orthodox_easter = true,
-                        "-p" => config.print_country_codes = true,
-                        "-w" => config.print_number_of_week = true,
-                        "-3" => config.previous_current_next_month = true,
-                        "-1" => config.only_current_month = true,
-                        "-C" => config.cal_mode = true,
-                        "-M" => config.weeks_start_monday = true,
-                        "-S" => config.weeks_start_sunday = true,
-                        "-b" => config.use_old_style_format = true,
-
                         "-m" => prev_arg_month = true,
                         "-s" => prev_arg_country_code = true,
                         "-y" => prev_arg_year = true,
@@ -150,9 +139,26 @@ impl Config {
                         "-H" => prev_arg_debug_highlighting = true,
                         "-W" => prev_arg_first_week_has_at_least_days = true,
 
-                        _ => config
-                            .unrecognized
-                            .push(UnrecognizedArgument::new(index, argument.to_owned())),
+                        _ => {
+                            if argument.starts_with('-') {
+                                /* check for combined arguments */
+                                if Self::is_valid_flag(VALID_COMBINED_FLAGS, argument) {
+                                    for ch in argument.chars() {
+                                        Self::set_config_for_flag(&mut config, ch)
+                                    }
+                                } else if argument.len() == 2 && Self::is_valid_flag(VALID_FLAGS, argument) {
+                                    Self::set_config_for_flag(&mut config, argument.chars().nth(1).unwrap(), )
+                                } else {
+                                    config
+                                        .unrecognized
+                                        .push(UnrecognizedArgument::new(index, argument.to_owned()))
+                                }
+                            } else {
+                                config
+                                    .unrecognized
+                                    .push(UnrecognizedArgument::new(index, argument.to_owned()))
+                            }
+                        }
                     }
                 }
             }
@@ -167,17 +173,16 @@ impl Config {
         /* deal with unrecognized args */
         if config.unrecognized.len() == 1 {
             /* 1 arg: year */
-            if let Some(pos) = config.unrecognized.iter().position(|u| u.index == 1) {
-                let ua = config.unrecognized.remove(pos);
-                let temp_year = ua.argument.expect("argument missing");
+            let ua = config.unrecognized.remove(0);
+            let temp_year = ua.argument.expect("argument missing");
 
-                if let Ok(year) = temp_year.parse::<u16>() {
-                    config.year = Some(year);
-                } else {
-                    config
-                        .errors
-                        .push(KnownError { code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
-                }
+            if let Ok(year) = temp_year.parse::<u16>() {
+                config.year = Some(year);
+            } else {
+                config.errors.push(KnownError {
+                    code: 1,
+                    message: Some(format!("rcal: not a valid year {}", temp_year)),
+                })
             }
         } else if config.unrecognized.len() == 2 {
             /* 2 args: month year */
@@ -193,16 +198,48 @@ impl Config {
                 if let Ok(year) = temp_year.parse::<u16>() {
                     config.year = Some(year);
                 } else {
-                    config
-                        .errors
-                        .push(KnownError { code: 1, message: Some(format!("rcal: not a valid year {}", temp_year)) })
+                    config.errors.push(KnownError {
+                        code: 1,
+                        message: Some(format!("rcal: not a valid year {}", temp_year)),
+                    })
                 }
             }
         }
 
-
         /* done */
         config
+    }
+
+    fn is_valid_flag(flags: &str, argument: &str) -> bool {
+        for ch in argument.chars() {
+            if ch == '-' {
+                continue;
+            }
+            if !flags.contains(ch) {
+                return false;
+            }
+        }
+        true
+    }
+
+    fn set_config_for_flag(config: &mut Config, flag: char) {
+        match flag {
+            '-' => {}
+            'h' => config.turn_off_highlight_today = true,
+            'J' => config.display_julian_calendar = true,
+            'e' => config.display_date_of_easter = true,
+            'j' => config.display_julian_days = true,
+            'o' => config.display_date_orthodox_easter = true,
+            'p' => config.print_country_codes = true,
+            'w' => config.print_number_of_week = true,
+            '3' => config.previous_current_next_month = true,
+            '1' => config.only_current_month = true,
+            'C' => config.cal_mode = true,
+            'M' => config.weeks_start_monday = true,
+            'S' => config.weeks_start_sunday = true,
+            'b' => config.use_old_style_format = true,
+            _ => panic!("unrecognized flag: {}", flag),
+        }
     }
 }
 
@@ -213,6 +250,7 @@ mod test {
     #[test]
     fn test_all_args() {
         let args = vec![
+            String::from("rcal.exe"),
             String::from("-h"),
             String::from("-J"),
             String::from("-e"),
@@ -224,7 +262,8 @@ mod test {
             String::from("-s"),
             String::from("uk"),
             String::from("-w"),
-            String::from("-y"), String::from("2012"),
+            String::from("-y"),
+            String::from("2012"),
             String::from("-3"),
             String::from("-1"),
             String::from("-A"),
@@ -245,7 +284,7 @@ mod test {
 
         let config: &Config = &Config::new(&args);
 
-        assert_eq!(false, config.turn_off_highlight_today);
+        assert_eq!(true, config.turn_off_highlight_today);
         assert_eq!(true, config.display_julian_calendar);
         assert_eq!(true, config.display_date_of_easter);
         assert_eq!(true, config.display_julian_days);
@@ -269,10 +308,11 @@ mod test {
         assert_eq!("4", config.first_week_has_at_least_days.clone().unwrap());
 
         assert_eq!(0, config.unrecognized.len());
+        assert_eq!(0, config.errors.len());
 
         assert_eq!(
             "Config { \
-            turn_off_highlight_today: false, \
+            turn_off_highlight_today: true, \
             display_julian_calendar: true, \
             display_date_of_easter: true, \
             display_julian_days: true, \
@@ -293,6 +333,202 @@ mod test {
             debug_current_date: Some(\"2012-11\"), \
             debug_highlighting: Some(\"2002-06-08\"), \
             first_week_has_at_least_days: Some(\"4\"), \
+            unrecognized: [], \
+            errors: [] \
+            }",
+            format!("{:?}", config)
+        );
+    }
+
+    #[test]
+    fn test_combined_args_no_year() {
+        let args = vec![
+            String::from("rcal.exe"),
+            String::from("-bhJjpwSM"),
+        ];
+
+        let config = Config::new(&args);
+
+        assert_eq!(true, config.turn_off_highlight_today);
+        assert_eq!(true, config.display_julian_calendar);
+        assert_eq!(false, config.display_date_of_easter);
+        assert_eq!(true, config.display_julian_days);
+        assert_eq!(false, config.display_date_orthodox_easter);
+        assert_eq!(true, config.print_country_codes);
+        assert_eq!(true, config.print_number_of_week);
+        assert_eq!(false, config.previous_current_next_month);
+        assert_eq!(false, config.only_current_month);
+        assert_eq!(false, config.cal_mode);
+        assert_eq!(true, config.weeks_start_monday);
+        assert_eq!(true, config.weeks_start_sunday);
+        assert_eq!(true, config.use_old_style_format);
+
+        assert_eq!(None, config.month);
+        assert_eq!(None, config.country_code);
+        assert_eq!(None, config.year);
+        assert_eq!(None, config.before);
+        assert_eq!(None, config.after);
+        assert_eq!(None, config.debug_current_date);
+        assert_eq!(None, config.debug_highlighting);
+        assert_eq!(None, config.first_week_has_at_least_days);
+
+        assert_eq!(0, config.unrecognized.len());
+        assert_eq!(0, config.errors.len());
+
+        assert_eq!(
+            "Config { \
+            turn_off_highlight_today: true, \
+            display_julian_calendar: true, \
+            display_date_of_easter: false, \
+            display_julian_days: true, \
+            display_date_orthodox_easter: false, \
+            print_country_codes: true, \
+            print_number_of_week: true, \
+            previous_current_next_month: false, \
+            only_current_month: false, \
+            cal_mode: false, \
+            weeks_start_monday: true, \
+            weeks_start_sunday: true, \
+            use_old_style_format: true, \
+            month: None, \
+            country_code: None, \
+            year: None, \
+            after: None, \
+            before: None, \
+            debug_current_date: None, \
+            debug_highlighting: None, \
+            first_week_has_at_least_days: None, \
+            unrecognized: [], \
+            errors: [] \
+            }",
+            format!("{:?}", config)
+        );
+    }
+
+    #[test]
+    fn test_combined_args() {
+        let args = vec![
+            String::from("rcal.exe"),
+            String::from("-bhJjpwSM"),
+            String::from("2021"),
+        ];
+
+        let config = Config::new(&args);
+
+        assert_eq!(true, config.turn_off_highlight_today);
+        assert_eq!(true, config.display_julian_calendar);
+        assert_eq!(false, config.display_date_of_easter);
+        assert_eq!(true, config.display_julian_days);
+        assert_eq!(false, config.display_date_orthodox_easter);
+        assert_eq!(true, config.print_country_codes);
+        assert_eq!(true, config.print_number_of_week);
+        assert_eq!(false, config.previous_current_next_month);
+        assert_eq!(false, config.only_current_month);
+        assert_eq!(false, config.cal_mode);
+        assert_eq!(true, config.weeks_start_monday);
+        assert_eq!(true, config.weeks_start_sunday);
+        assert_eq!(true, config.use_old_style_format);
+
+        assert_eq!(None, config.month);
+        assert_eq!(None, config.country_code);
+        assert_eq!(2021, config.year.unwrap());
+        assert_eq!(None, config.before);
+        assert_eq!(None, config.after);
+        assert_eq!(None, config.debug_current_date);
+        assert_eq!(None, config.debug_highlighting);
+        assert_eq!(None, config.first_week_has_at_least_days);
+
+        assert_eq!(0, config.unrecognized.len());
+        assert_eq!(0, config.errors.len());
+
+        assert_eq!(
+            "Config { \
+            turn_off_highlight_today: true, \
+            display_julian_calendar: true, \
+            display_date_of_easter: false, \
+            display_julian_days: true, \
+            display_date_orthodox_easter: false, \
+            print_country_codes: true, \
+            print_number_of_week: true, \
+            previous_current_next_month: false, \
+            only_current_month: false, \
+            cal_mode: false, \
+            weeks_start_monday: true, \
+            weeks_start_sunday: true, \
+            use_old_style_format: true, \
+            month: None, \
+            country_code: None, \
+            year: Some(2021), \
+            after: None, \
+            before: None, \
+            debug_current_date: None, \
+            debug_highlighting: None, \
+            first_week_has_at_least_days: None, \
+            unrecognized: [], \
+            errors: [] \
+            }",
+            format!("{:?}", config)
+        );
+    }
+
+    #[test]
+    fn test_year_only() {
+        let args = vec![
+            String::from("rcal.exe"),
+            String::from("2022"),
+        ];
+
+        let config = Config::new(&args);
+
+        assert_eq!(false, config.turn_off_highlight_today);
+        assert_eq!(false, config.display_julian_calendar);
+        assert_eq!(false, config.display_date_of_easter);
+        assert_eq!(false, config.display_julian_days);
+        assert_eq!(false, config.display_date_orthodox_easter);
+        assert_eq!(false, config.print_country_codes);
+        assert_eq!(false, config.print_number_of_week);
+        assert_eq!(false, config.previous_current_next_month);
+        assert_eq!(false, config.only_current_month);
+        assert_eq!(false, config.cal_mode);
+        assert_eq!(false, config.weeks_start_monday);
+        assert_eq!(false, config.weeks_start_sunday);
+        assert_eq!(false, config.use_old_style_format);
+
+        assert_eq!(None, config.month);
+        assert_eq!(None, config.country_code);
+        assert_eq!(2022, config.year.clone().unwrap());
+        assert_eq!(None, config.before);
+        assert_eq!(None, config.after);
+        assert_eq!(None, config.debug_current_date);
+        assert_eq!(None, config.debug_highlighting);
+        assert_eq!(None, config.first_week_has_at_least_days);
+
+        assert_eq!(0, config.unrecognized.len());
+        assert_eq!(0, config.errors.len());
+
+        assert_eq!(
+            "Config { \
+            turn_off_highlight_today: false, \
+            display_julian_calendar: false, \
+            display_date_of_easter: false, \
+            display_julian_days: false, \
+            display_date_orthodox_easter: false, \
+            print_country_codes: false, \
+            print_number_of_week: false, \
+            previous_current_next_month: false, \
+            only_current_month: false, \
+            cal_mode: false, \
+            weeks_start_monday: false, \
+            weeks_start_sunday: false, \
+            use_old_style_format: false, \
+            month: None, \
+            country_code: None, \
+            year: Some(2022), \
+            after: None, \
+            before: None, \
+            debug_current_date: None, \
+            debug_highlighting: None, \
+            first_week_has_at_least_days: None, \
             unrecognized: [], \
             errors: [] \
             }",
@@ -330,6 +566,7 @@ mod test {
         assert_eq!(None, config.first_week_has_at_least_days);
 
         assert_eq!(0, config.unrecognized.len());
+        assert_eq!(0, config.errors.len());
 
         assert_eq!(
             "Config { \
