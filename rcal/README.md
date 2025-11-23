@@ -12,6 +12,16 @@ Do not use this `rcal` program in lieu of `cal` under any circumstances.  This i
 
 ---
 <details>
+<summary>features checklist</summary>
+
+| Status | Feature | Detail |
+| ------ | ------- | ------ |
+| [ ]    | -h      | turns off highlighting of today |
+
+</details>
+
+---
+<details>
 <summary>cal manpages</summary>
 
 ```
