@@ -537,6 +537,138 @@ mod test {
     }
 
     #[test]
+    fn test_month_year() {
+        let args = vec![
+            String::from("rcal.exe"),
+            String::from("jan"),
+            String::from("2019"),
+        ];
+
+        let config = Config::new(&args);
+
+        assert_eq!(false, config.turn_off_highlight_today);
+        assert_eq!(false, config.display_julian_calendar);
+        assert_eq!(false, config.display_date_of_easter);
+        assert_eq!(false, config.display_julian_days);
+        assert_eq!(false, config.display_date_orthodox_easter);
+        assert_eq!(false, config.print_country_codes);
+        assert_eq!(false, config.print_number_of_week);
+        assert_eq!(false, config.previous_current_next_month);
+        assert_eq!(false, config.only_current_month);
+        assert_eq!(false, config.cal_mode);
+        assert_eq!(false, config.weeks_start_monday);
+        assert_eq!(false, config.weeks_start_sunday);
+        assert_eq!(false, config.use_old_style_format);
+
+        assert_eq!("jan", config.month.clone().unwrap());
+        assert_eq!(None, config.country_code);
+        assert_eq!(2019, config.year.clone().unwrap());
+        assert_eq!(None, config.before);
+        assert_eq!(None, config.after);
+        assert_eq!(None, config.debug_current_date);
+        assert_eq!(None, config.debug_highlighting);
+        assert_eq!(None, config.first_week_has_at_least_days);
+
+        assert_eq!(0, config.unrecognized.len());
+        assert_eq!(0, config.errors.len());
+
+        assert_eq!(
+            "Config { \
+            turn_off_highlight_today: false, \
+            display_julian_calendar: false, \
+            display_date_of_easter: false, \
+            display_julian_days: false, \
+            display_date_orthodox_easter: false, \
+            print_country_codes: false, \
+            print_number_of_week: false, \
+            previous_current_next_month: false, \
+            only_current_month: false, \
+            cal_mode: false, \
+            weeks_start_monday: false, \
+            weeks_start_sunday: false, \
+            use_old_style_format: false, \
+            month: Some(\"jan\"), \
+            country_code: None, \
+            year: Some(2019), \
+            after: None, \
+            before: None, \
+            debug_current_date: None, \
+            debug_highlighting: None, \
+            first_week_has_at_least_days: None, \
+            unrecognized: [], \
+            errors: [] \
+            }",
+            format!("{:?}", config)
+        );
+    }
+
+    #[test]
+    fn test_year_month() {
+        let args = vec![
+            String::from("rcal.exe"),
+            String::from("2018"),
+            String::from("feb"),
+        ];
+
+        let config = Config::new(&args);
+
+        assert_eq!(false, config.turn_off_highlight_today);
+        assert_eq!(false, config.display_julian_calendar);
+        assert_eq!(false, config.display_date_of_easter);
+        assert_eq!(false, config.display_julian_days);
+        assert_eq!(false, config.display_date_orthodox_easter);
+        assert_eq!(false, config.print_country_codes);
+        assert_eq!(false, config.print_number_of_week);
+        assert_eq!(false, config.previous_current_next_month);
+        assert_eq!(false, config.only_current_month);
+        assert_eq!(false, config.cal_mode);
+        assert_eq!(false, config.weeks_start_monday);
+        assert_eq!(false, config.weeks_start_sunday);
+        assert_eq!(false, config.use_old_style_format);
+
+        assert_eq!("2018", config.month.clone().unwrap());
+        assert_eq!(None, config.country_code);
+        assert_eq!(None, config.year);
+        assert_eq!(None, config.before);
+        assert_eq!(None, config.after);
+        assert_eq!(None, config.debug_current_date);
+        assert_eq!(None, config.debug_highlighting);
+        assert_eq!(None, config.first_week_has_at_least_days);
+
+        assert_eq!(0, config.unrecognized.len());
+        assert_eq!(1, config.errors.len());
+
+        assert_eq!(
+            "Config { \
+            turn_off_highlight_today: false, \
+            display_julian_calendar: false, \
+            display_date_of_easter: false, \
+            display_julian_days: false, \
+            display_date_orthodox_easter: false, \
+            print_country_codes: false, \
+            print_number_of_week: false, \
+            previous_current_next_month: false, \
+            only_current_month: false, \
+            cal_mode: false, \
+            weeks_start_monday: false, \
+            weeks_start_sunday: false, \
+            use_old_style_format: false, \
+            month: Some(\"2018\"), \
+            country_code: None, \
+            year: None, \
+            after: None, \
+            before: None, \
+            debug_current_date: None, \
+            debug_highlighting: None, \
+            first_week_has_at_least_days: None, \
+            unrecognized: [], \
+            errors: [KnownError { code: 1, message: Some(\"rcal: not a valid year feb\") }] \
+            }",
+            format!("{:?}", config)
+        );
+    }
+
+    #[test]
     fn test_no_args() {
         let args: Vec<String> = Vec::new();
 
