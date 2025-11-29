@@ -9,3 +9,7 @@ edition = "2021"
 chrono = "0.4.31"
 string-builder = "0.2.0"
 common = { path = "../common" }
+
+[[bin]]
+name = "cal"
+path = "src/main.rs"
