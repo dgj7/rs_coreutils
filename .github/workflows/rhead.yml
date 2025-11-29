@@ -1,0 +1,24 @@
+name: rhead
+
+on:
+  push:
+    paths:
+      - rhead/**
+  pull_request:
+    paths:
+      - rhead/**
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test
+        run: cargo test --verbose
+        working-directory: ./rhead
+      - name: Build
+        run: cargo build --examples --verbose
+        working-directory: ./rhead

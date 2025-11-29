@@ -1,9 +1,17 @@
 [workspace]
 members = [
+    # shared
     "common",
-    "rcal",
-    "rtouch",
+
+    # text/input processing
+    "rhead",
     "rwc",
+
+    # file/directory management
+    "rtouch",
+
+    # whatever else i feel like
+    "rcal",
 ]
 resolver="1"
 

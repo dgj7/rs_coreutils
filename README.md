@@ -4,17 +4,17 @@ Rewriting coreutils with Rust.
 Don't use any of these programs in lieu of the built-in commands; this project is for learning purposes only, and _is not a suitable replacement_.
 
 ## Text Processing And Input
-| Utility | Status                                                                                   | Manual                                                                                          |
-|---------|------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| head    | :x:                                                                                      | [Displays the beginning of a file]()                                                            |
-| tail    | :x:                                                                                      | [Displays the end of a file]()                                                                  |
-| sort    | :x:                                                                                      | [Sorts lines of text files]()                                                                   |
-| uniq    | :x:                                                                                      | [Removes duplicate lines from a sorted file]()                                                  |
-| wc      | [![rwc](https://github.com/dgj7/rs_coreutils/actions/workflows/rwc.yml/badge.svg)](/rwc) | [Prints word, line, and byte counts for files](https://man7.org/linux/man-pages/man1/wc.1.html) |
-| tr      | :x:                                                                                      | [Translates or deletes characters]()                                                            |
-| grep    | :x:                                                                                      | [Searches for patterns in files]()                                                              |
-| echo    | :x:                                                                                      | [Displays text on the terminal]()                                                               |
-| printf  | :x:                                                                                      | [Formats and prints data]()                                                                     |
+| Utility | Status                                                                                         | Manual                                                                                          |
+|---------|------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| head    | [![rhead](https://github.com/dgj7/rs_coreutils/actions/workflows/rhead.yml/badge.svg)](/rhead) | [Displays the beginning of a file]()                                                            |
+| tail    | :x:                                                                                            | [Displays the end of a file]()                                                                  |
+| sort    | :x:                                                                                            | [Sorts lines of text files]()                                                                   |
+| uniq    | :x:                                                                                            | [Removes duplicate lines from a sorted file]()                                                  |
+| wc      | [![rwc](https://github.com/dgj7/rs_coreutils/actions/workflows/rwc.yml/badge.svg)](/rwc)       | [Prints word, line, and byte counts for files](https://man7.org/linux/man-pages/man1/wc.1.html) |
+| tr      | :x:                                                                                            | [Translates or deletes characters]()                                                            |
+| grep    | :x:                                                                                            | [Searches for patterns in files]()                                                              |
+| echo    | :x:                                                                                            | [Displays text on the terminal]()                                                               |
+| printf  | :x:                                                                                            | [Formats and prints data]()                                                                     |
 
 ## File & Directory Management
 | Utility | Status                                                                                            | Manual                                                                        |
