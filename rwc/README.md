@@ -6,9 +6,24 @@ Do not use this `rwc` program in lieu of `wc` under any circumstances.  This is 
 Note that, as of `v1.0.2`, `rwc` doesn't yet return the same values as `wc`.
 
 ## Progress
-* [ ] implement argument parsing, with config struct
-* [ ] implement `wc` functionality
-* [ ] unit tests
+
+| Status | Feature                                        |
+|--------|------------------------------------------------|
+| :x:    | implement argument parsing, with config struct |
+| :x:    | implement core `wc` functionality              |
+| :x:    | completely implement each flag, with tests     |
+| :x:    | unit tests                                     |
+
+| Status | Feature               | Details                                                                                                              |
+|--------|-----------------------|----------------------------------------------------------------------------------------------------------------------|
+| :x:    | -c, --bytes           | print the byte counts                                                                                                |
+| :x:    | -m, --chars           | print the character counts                                                                                           |
+| :x:    | -l, --lines           | print the newline counts                                                                                             |
+| :x:    | --files0-from=F       | read input from the files specified by NUL-terminated names in file F; If F is - then read names from standard input |
+| :x:    | -L, --max-line-length | print the maximum display width                                                                                      |
+| :x:    | -w, --words           | print the word counts                                                                                                |
+| :x:    | --help                | display this help and exit                                                                                           |
+| :x:    | --version             | output version information and exit                                                                                  |
 
 ---
 <details>

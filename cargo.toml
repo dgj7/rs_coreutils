@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "common",
+    "rcal",
+    "rtouch",
+    "rwc",
+]
+resolver="1"
+

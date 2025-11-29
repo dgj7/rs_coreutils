@@ -1,4 +1,5 @@
-use crate::config::{Config, KnownError};
+use common::input::known_error::KnownError;
+use crate::config::{Config};
 use crate::formatter;
 use crate::state::app_state::ApplicationState;
 use crate::time::today::TodayFactory;
@@ -19,12 +20,6 @@ pub fn cal(args: Vec<String>) -> Result<Vec<String>, Vec<KnownError>> {
         Err(config.errors)
     }
 }
-
-/*
-for (idx, line) in lines.iter().enumerate() {
-    println!("assert_eq!(\"{}\", lines[{}]);", line, idx);
-}
-*/
 
 #[cfg(test)]
 mod no_flag_happy_path_tests {
