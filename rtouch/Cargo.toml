@@ -5,3 +5,7 @@ edition = "2024"
 
 [dependencies]
 common = { path = "../common" }
+
+[[bin]]
+name = "touch"
+path = "src/main.rs"
