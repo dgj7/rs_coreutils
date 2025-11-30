@@ -6,23 +6,18 @@ pub struct Flag {
     name: String,
 }
 
-pub struct StringFlagValidator {
+pub struct FlagValidator {
     flags : Vec<Flag>
 }
 
-impl StringFlagValidator {
-    pub fn new_from_strings(flags: Vec<String>) -> StringFlagValidator {
+impl FlagValidator {
+    pub fn new_flags_from_strings(flags: Vec<String>) -> FlagValidator {
         let mut vec : Vec<Flag> = Vec::new();
         for flag in flags {
-            let dashes : String = flag.chars()
-                .take_while(|&f| f == DASH)
-                .collect();
-            let name : String = flag.chars()
-                .skip_while(|&f| f == DASH)
-                .collect();
+            let (dashes, name) = Self::read_dashes_and_name(&*flag);
 
             if dashes.len() == 0 {
-                panic!("configuration error: flag without dashes");
+                panic!("{}: configuration error: this mode expects that supplied flags will have dashes", std::any::type_name::<Flag>());
             }
 
             let result = Flag { dash_count: dashes.len(), name };
@@ -35,17 +30,22 @@ impl StringFlagValidator {
         Self::new_from_flags(&vec)
     }
 
-    pub fn new_from_flags(flags: &Vec<Flag>) -> StringFlagValidator {
-        StringFlagValidator { flags : flags.to_owned() }
+    pub fn new_from_flags(flags: &Vec<Flag>) -> FlagValidator {
+        FlagValidator { flags : flags.to_owned() }
+    }
+
+    fn read_dashes_and_name(flag: &str) -> (String, String) {
+        let dashes: String = flag.chars()
+            .take_while(|&f| f == DASH)
+            .collect();
+        let name: String = flag.chars()
+            .skip_while(|&f| f == DASH)
+            .collect();
+        return (dashes, name);
     }
 
     pub fn is_valid_flag(&self, flag: &str) -> bool {
-        let dashes : String = flag.chars()
-            .take_while(|&f| f == DASH)
-            .collect();
-        let name : String = flag.chars()
-            .skip_while(|&f| f == DASH)
-            .collect();
+        let (dashes, name) = Self::read_dashes_and_name(flag);
 
         self.flags
             .iter()
@@ -64,11 +64,11 @@ impl StringFlagValidator {
 
 #[cfg(test)]
 mod tests {
-    use crate::input::flags::StringFlagValidator;
+    use crate::input::flags::FlagValidator;
 
     #[test]
     fn test() {
-        let fv = StringFlagValidator::new_from_strings(vec![
+        let fv = FlagValidator::new_flags_from_strings(vec![
             "-v".to_owned(), "--verbose".to_owned(),
             "-q".to_owned(), "--quiet".to_owned(),
         ]);
