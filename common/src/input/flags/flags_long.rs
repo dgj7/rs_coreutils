@@ -1,5 +1,6 @@
 use crate::input::flags::flag_data::{Flag, FlagValidator};
 use crate::input::flags::flags_common::{read_dashes_and_name};
+use crate::input::unrecognized::UnrecognizedArgument;
 
 const DASH_COUNT: usize = 2;
 
@@ -27,7 +28,7 @@ impl LongFlags {
             }
 
             /* create the flag object itself */
-            let result = Flag { expected_dash_count: DASH_COUNT, name: name };
+            let result = Flag { expected_dash_count: DASH_COUNT, name };
 
             /* update the outgoing vector */
             if !vec.contains(&result) {
@@ -41,13 +42,15 @@ impl LongFlags {
 
 impl FlagValidator for LongFlags {
     fn is_valid_flag(&self, flag: &str) -> bool {
-        !self.find_matching_flags(flag).is_empty()
+        let (matches,unrecognized) = self.find_matching_flags(flag);
+        !matches.is_empty() && unrecognized.is_empty()
     }
 
-    fn find_matching_flags(&self, flag: &str) -> Vec<Flag> {
+    fn find_matching_flags(&self, flag: &str) -> (Vec<Flag>, Vec<UnrecognizedArgument>) {
         let (dashes, name) = read_dashes_and_name(flag);
-        let mut output: Vec<Flag> = vec!();
-        for fd in self.flag_definitions.iter() {
+        let mut flags: Vec<Flag> = vec!();
+        let mut unrecognized: Vec<UnrecognizedArgument> = vec!();
+        for (index, fd) in self.flag_definitions.iter().enumerate() {
             let dashes_ok = if self.enforce_dash_count {
                 fd.expected_dash_count == dashes.len()
             } else {
@@ -55,10 +58,12 @@ impl FlagValidator for LongFlags {
             };
             let name_ok = fd.name == name;
             if dashes_ok && name_ok {
-                output.push(fd.clone());
+                flags.push(fd.clone());
+            } else {
+                unrecognized.push(UnrecognizedArgument { index, argument: Some(flag.to_string()) });
             }
         }
-        output
+        (flags,unrecognized)
     }
 }
 
