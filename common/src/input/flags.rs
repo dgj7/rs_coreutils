@@ -1,3 +1,4 @@
+const DASH: char = '-';
 
 #[derive(PartialEq,Clone)]
 pub struct Flag {
@@ -14,10 +15,10 @@ impl FlagValidator {
         let mut vec : Vec<Flag> = Vec::new();
         for flag in flags {
             let dashes : String = flag.chars()
-                .take_while(|&f| f == '-')
+                .take_while(|&f| f == DASH)
                 .collect();
             let name : String = flag.chars()
-                .skip_while(|&f| f == '-')
+                .skip_while(|&f| f == DASH)
                 .collect();
 
             if dashes.len() == 0 {
@@ -40,10 +41,10 @@ impl FlagValidator {
 
     pub fn is_valid_flag(&self, flag: &str) -> bool {
         let dashes : String = flag.chars()
-            .take_while(|&f| f == '-')
+            .take_while(|&f| f == DASH)
             .collect();
         let name : String = flag.chars()
-            .skip_while(|&f| f == '-')
+            .skip_while(|&f| f == DASH)
             .collect();
 
         self.flags
