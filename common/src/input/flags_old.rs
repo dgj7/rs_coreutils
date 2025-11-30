@@ -64,7 +64,7 @@ impl FlagValidator {
 
 #[cfg(test)]
 mod tests {
-    use crate::input::flags::FlagValidator;
+    use crate::input::flags_old::FlagValidator;
 
     #[test]
     fn test() {
