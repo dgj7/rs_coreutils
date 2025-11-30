@@ -6,12 +6,12 @@ pub struct Flag {
     name: String,
 }
 
-pub struct FlagValidator {
+pub struct StringFlagValidator {
     flags : Vec<Flag>
 }
 
-impl FlagValidator {
-    pub fn new_from_strings(flags: Vec<String>) -> FlagValidator {
+impl StringFlagValidator {
+    pub fn new_from_strings(flags: Vec<String>) -> StringFlagValidator {
         let mut vec : Vec<Flag> = Vec::new();
         for flag in flags {
             let dashes : String = flag.chars()
@@ -35,8 +35,8 @@ impl FlagValidator {
         Self::new_from_flags(&vec)
     }
 
-    pub fn new_from_flags(flags: &Vec<Flag>) -> FlagValidator {
-        FlagValidator { flags : flags.to_owned() }
+    pub fn new_from_flags(flags: &Vec<Flag>) -> StringFlagValidator {
+        StringFlagValidator { flags : flags.to_owned() }
     }
 
     pub fn is_valid_flag(&self, flag: &str) -> bool {
@@ -64,11 +64,11 @@ impl FlagValidator {
 
 #[cfg(test)]
 mod tests {
-    use crate::input::flags::FlagValidator;
+    use crate::input::flags::StringFlagValidator;
 
     #[test]
     fn test() {
-        let fv = FlagValidator::new_from_strings(vec![
+        let fv = StringFlagValidator::new_from_strings(vec![
             "-v".to_owned(), "--verbose".to_owned(),
             "-q".to_owned(), "--quiet".to_owned(),
         ]);
