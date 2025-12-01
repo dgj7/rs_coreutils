@@ -1,4 +1,4 @@
-use crate::input::flags::unrecognized::UnrecognizedArgument;
+use crate::input::flags::unrecognized::UnrecognizedFlag;
 
 #[derive(Debug,PartialEq,Clone)]
 pub struct Flag {
@@ -8,5 +8,5 @@ pub struct Flag {
 
 pub trait FlagValidator {
     fn is_valid_flag(&self, flag: &str) -> bool;
-    fn find_matching_flags(&self, flag: &str) -> (Vec<Flag>, Vec<UnrecognizedArgument>);
+    fn find_matching_flags(&self, flag: &str) -> (Vec<Flag>, Vec<UnrecognizedFlag>);
 }

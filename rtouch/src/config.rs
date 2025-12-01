@@ -1,5 +1,5 @@
 use std::env::Args;
-use common::input::flags::unrecognized::UnrecognizedArgument;
+use common::input::flags::unrecognized::UnrecognizedFlag;
 
 ///
 /// Storage for the application configuration.
@@ -7,7 +7,7 @@ use common::input::flags::unrecognized::UnrecognizedArgument;
 pub(crate) struct Config {
     pub(crate) print_help_and_exit: bool,
     pub(crate) print_version_and_exit: bool,
-    pub(crate) unrecognized: Vec<UnrecognizedArgument>,
+    pub(crate) unrecognized: Vec<UnrecognizedFlag>,
 
     pub(crate) file_paths: Vec<String>,
 
@@ -116,7 +116,7 @@ impl Config {
                             let actual = argument.split("=").collect::<Vec<&str>>()[1];
                             config.time_word = Some(actual.to_string());
                         } else if argument.starts_with("-") && argument.len() > 1 {
-                            config.unrecognized.push(UnrecognizedArgument::new(index, argument.to_string()));
+                            config.unrecognized.push(UnrecognizedFlag::new(index, argument.to_string()));
                         } else {
                             config.file_paths.push(argument);
                             file_paths_started = true;

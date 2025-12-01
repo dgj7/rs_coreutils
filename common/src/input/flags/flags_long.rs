@@ -1,6 +1,6 @@
 use crate::input::flags::flag_data::{Flag, FlagValidator};
 use crate::input::flags::flags_common::{read_dashes_and_name};
-use crate::input::flags::unrecognized::UnrecognizedArgument;
+use crate::input::flags::unrecognized::UnrecognizedFlag;
 
 const DASH_COUNT: usize = 2;
 
@@ -46,10 +46,10 @@ impl FlagValidator for LongFlags {
         !matches.is_empty() && unrecognized.is_empty()
     }
 
-    fn find_matching_flags(&self, flag: &str) -> (Vec<Flag>, Vec<UnrecognizedArgument>) {
+    fn find_matching_flags(&self, flag: &str) -> (Vec<Flag>, Vec<UnrecognizedFlag>) {
         let (dashes, name) = read_dashes_and_name(flag);
         let mut flags: Vec<Flag> = vec!();
-        let mut unrecognized: Vec<UnrecognizedArgument> = vec!();
+        let mut unrecognized: Vec<UnrecognizedFlag> = vec!();
         for fd in self.flag_definitions.iter() {
             let dashes_ok = if self.enforce_dash_count {
                 fd.expected_dash_count == dashes.len()
@@ -63,7 +63,7 @@ impl FlagValidator for LongFlags {
         }
 
         if flags.is_empty() {
-            unrecognized.push(UnrecognizedArgument { index: 0, argument: Some(flag.to_string())});
+            unrecognized.push(UnrecognizedFlag { index: 0, argument: Some(flag.to_string())});
         }
 
         (flags,unrecognized)

@@ -1,6 +1,6 @@
 use crate::input::flags::flag_data::{Flag, FlagValidator};
 use crate::input::flags::flags_common::read_dashes_and_name;
-use crate::input::flags::unrecognized::UnrecognizedArgument;
+use crate::input::flags::unrecognized::UnrecognizedFlag;
 
 const DASH_COUNT : usize = 1;
 
@@ -36,9 +36,9 @@ impl ShortFlags {
         ShortFlags { flag_definitions: fd, enforce_dash_count }
     }
 
-    fn search_for_name_matches(&self, index : usize, name: &str) -> (Vec<Flag>, Vec<UnrecognizedArgument>) {
+    fn search_for_name_matches(&self, index : usize, name: &str) -> (Vec<Flag>, Vec<UnrecognizedFlag>) {
         let mut flags : Vec<Flag> = vec!();
-        let mut unrecognized : Vec<UnrecognizedArgument> = vec!();
+        let mut unrecognized : Vec<UnrecognizedFlag> = vec!();
 
         for flag_def in self.flag_definitions.iter() {
             if name == flag_def.name {
@@ -47,7 +47,7 @@ impl ShortFlags {
         }
 
         if flags.is_empty() {
-            unrecognized.push(UnrecognizedArgument { index, argument: Some(name.to_string()) });
+            unrecognized.push(UnrecognizedFlag { index, argument: Some(name.to_string()) });
         }
 
         (flags, unrecognized)
@@ -60,14 +60,14 @@ impl FlagValidator for ShortFlags {
         !matches.is_empty() && unrecognized.is_empty()
     }
 
-    fn find_matching_flags(&self, flag: &str) -> (Vec<Flag>, Vec<UnrecognizedArgument>) {
+    fn find_matching_flags(&self, flag: &str) -> (Vec<Flag>, Vec<UnrecognizedFlag>) {
         let (dashes, name) = read_dashes_and_name(flag);
         let mut flags: Vec<Flag> = vec!();
-        let mut unrecognized: Vec<UnrecognizedArgument> = vec!();
+        let mut unrecognized: Vec<UnrecognizedFlag> = vec!();
 
         for (pf_idx, potential_flag) in name.chars().map(|c| c.to_string()).enumerate() {
             if self.enforce_dash_count && dashes.len() != DASH_COUNT {
-                unrecognized.push(UnrecognizedArgument { index: pf_idx, argument: Some(potential_flag.to_string()) });
+                unrecognized.push(UnrecognizedFlag { index: pf_idx, argument: Some(potential_flag.to_string()) });
             } else {
                 let (pf_flags, pf_unrecognized) = self.search_for_name_matches(pf_idx, &potential_flag);
                 flags.extend(pf_flags);

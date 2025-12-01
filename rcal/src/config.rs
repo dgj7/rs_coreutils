@@ -1,7 +1,7 @@
 use crate::time::name::month_num_to_name;
 use crate::time::today::TodayFactory;
 use common::input::known_error::KnownError;
-use common::input::flags::unrecognized::UnrecognizedArgument;
+use common::input::flags::unrecognized::UnrecognizedFlag;
 
 const VALID_FLAGS: &str = "hJejopw31CMSb";
 const VALID_COMBINED_FLAGS: &str = "bhJjpwSM";
@@ -37,7 +37,7 @@ pub(crate) struct Config {
     pub(crate) first_week_has_at_least_days: Option<String>,
 
     /* unrecognized arguments */
-    pub(crate) unrecognized: Vec<UnrecognizedArgument>,
+    pub(crate) unrecognized: Vec<UnrecognizedFlag>,
     pub(crate) errors: Vec<KnownError>,
 }
 
@@ -151,12 +151,12 @@ impl Config {
                                 } else {
                                     config
                                         .unrecognized
-                                        .push(UnrecognizedArgument::new(index, argument.to_owned()))
+                                        .push(UnrecognizedFlag::new(index, argument.to_owned()))
                                 }
                             } else {
                                 config
                                     .unrecognized
-                                    .push(UnrecognizedArgument::new(index, argument.to_owned()))
+                                    .push(UnrecognizedFlag::new(index, argument.to_owned()))
                             }
                         }
                     }
