@@ -1,7 +1,7 @@
 use crate::time::name::month_num_to_name;
 use crate::time::today::TodayFactory;
 use common::input::known_error::KnownError;
-use common::input::flags::unrecognized::UnrecognizedFlag;
+use common::input::flags::flags_unrecognized::UnrecognizedFlag;
 
 const VALID_FLAGS: &str = "hJejopw31CMSb";
 const VALID_COMBINED_FLAGS: &str = "bhJjpwSM";

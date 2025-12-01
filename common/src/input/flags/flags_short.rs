@@ -1,6 +1,6 @@
 use crate::input::flags::flag_data::{Flag, FlagValidator};
 use crate::input::flags::flags_common::read_dashes_and_name;
-use crate::input::flags::unrecognized::UnrecognizedFlag;
+use crate::input::flags::flags_unrecognized::UnrecognizedFlag;
 
 const DASH_COUNT : usize = 1;
 

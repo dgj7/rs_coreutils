@@ -1,5 +1,5 @@
 use std::env::Args;
-use common::input::flags::unrecognized::UnrecognizedFlag;
+use common::input::flags::flags_unrecognized::UnrecognizedFlag;
 
 ///
 /// Storage for the application configuration.
