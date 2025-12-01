@@ -1,4 +1,4 @@
-use crate::input::unrecognized::UnrecognizedArgument;
+use crate::input::flags::unrecognized::UnrecognizedArgument;
 
 #[derive(Debug,PartialEq,Clone)]
 pub struct Flag {

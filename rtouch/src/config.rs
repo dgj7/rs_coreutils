@@ -1,5 +1,5 @@
 use std::env::Args;
-use common::input::unrecognized::UnrecognizedArgument;
+use common::input::flags::unrecognized::UnrecognizedArgument;
 
 ///
 /// Storage for the application configuration.
