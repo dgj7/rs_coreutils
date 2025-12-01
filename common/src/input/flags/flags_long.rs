@@ -5,17 +5,17 @@ use crate::input::unrecognized::UnrecognizedArgument;
 const DASH_COUNT: usize = 2;
 
 pub struct LongFlags {
-    flag_definitions: Vec<Flag>,
+    pub flag_definitions: Vec<Flag>,
     enforce_dash_count: bool,
 }
 
 impl LongFlags {
-    pub fn new_from_strings(flags: &Vec<String>, enforce_dash_count: bool) -> LongFlags {
-        let mut vec : Vec<Flag> = Vec::new();
+    pub fn new_from_strings(potentials: &Vec<String>, enforce_dash_count: bool) -> LongFlags {
+        let mut fd: Vec<Flag> = vec!();
 
-        for flag in flags {
+        for potential in potentials {
             /* strip/split dashes and name */
-            let (dashes, name) = read_dashes_and_name(&*flag);
+            let (dashes, name) = read_dashes_and_name(&potential);
 
             /* do some validation, if configured */
             if enforce_dash_count {
@@ -31,12 +31,12 @@ impl LongFlags {
             let result = Flag { expected_dash_count: DASH_COUNT, name };
 
             /* update the outgoing vector */
-            if !vec.contains(&result) {
-                vec.push(result);
+            if !fd.contains(&result) {
+                fd.push(result);
             }
         }
 
-        LongFlags { flag_definitions: vec, enforce_dash_count }
+        LongFlags { flag_definitions: fd, enforce_dash_count }
     }
 }
 
@@ -50,7 +50,7 @@ impl FlagValidator for LongFlags {
         let (dashes, name) = read_dashes_and_name(flag);
         let mut flags: Vec<Flag> = vec!();
         let mut unrecognized: Vec<UnrecognizedArgument> = vec!();
-        for (index, fd) in self.flag_definitions.iter().enumerate() {
+        for fd in self.flag_definitions.iter() {
             let dashes_ok = if self.enforce_dash_count {
                 fd.expected_dash_count == dashes.len()
             } else {
@@ -59,10 +59,13 @@ impl FlagValidator for LongFlags {
             let name_ok = fd.name == name;
             if dashes_ok && name_ok {
                 flags.push(fd.clone());
-            } else {
-                unrecognized.push(UnrecognizedArgument { index, argument: Some(flag.to_string()) });
             }
         }
+
+        if flags.is_empty() {
+            unrecognized.push(UnrecognizedArgument { index: 0, argument: Some(flag.to_string())});
+        }
+
         (flags,unrecognized)
     }
 }
@@ -80,10 +83,14 @@ mod tests {
 
     #[test]
     fn test_with_enforcement() {
+        /* create object under test */
         let fv = LongFlags::new_from_strings(&vec![
             "--verbose".to_owned(),
             "--quiet".to_owned(),
         ], true);
+
+        /* verify our creation */
+        assert_eq!(2, fv.flag_definitions.len());
 
         /* success when exact match */
         assert_eq!(false, fv.is_valid_flag("-v"));
@@ -106,10 +113,14 @@ mod tests {
 
     #[test]
     fn test_without_enforcement() {
+        /* create object under test */
         let fv = LongFlags::new_from_strings(&vec![
             "-v".to_owned(), "--verbose".to_owned(),
             "-q".to_owned(), "--quiet".to_owned(),
         ], false);
+
+        /* verify our creation */
+        assert_eq!(4, fv.flag_definitions.len());
 
         /* success when exact match */
         assert_eq!(true, fv.is_valid_flag("-v"));
