@@ -1,5 +1,6 @@
 use crate::input::flags::flag_data::{Flag, FlagValidator};
 use crate::input::flags::flags_common::{read_dashes_and_name};
+use crate::input::flags::flags_dash_enf::validate_dashes;
 use crate::input::flags::flags_unrecognized::UnrecognizedFlag;
 
 const DASH_COUNT: usize = 2;
@@ -18,14 +19,7 @@ impl LongFlags {
             let (dashes, name) = read_dashes_and_name(&potential);
 
             /* do some validation, if configured */
-            if enforce_dash_count {
-                if dashes.len() == 0 {
-                    panic!("{}: configuration error: this mode expects that supplied flags will have dashes", std::any::type_name::<Flag>());
-                }
-                if dashes.len() != DASH_COUNT {
-                    panic!("{}: configuration error: this mode expects {} dashes", std::any::type_name::<Flag>(), DASH_COUNT);
-                }
-            }
+            validate_dashes(enforce_dash_count, DASH_COUNT, &dashes);
 
             /* create the flag object itself */
             let result = Flag { expected_dash_count: DASH_COUNT, name };
