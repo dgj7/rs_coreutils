@@ -36,7 +36,7 @@ pub fn month_arg_match(month_arg: &str) -> Option<u16> {
 
 // todo: unit test
 pub fn month_num_to_name(month_num: u16) -> String {
-    if month_num < 1 || month_num > 12 {
+    if !(1..=12).contains(&month_num) {
         panic!("invalid month: [{}]", month_num);
     }
     
