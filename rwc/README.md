@@ -13,6 +13,7 @@ Note that, as of `v1.0.2`, `rwc` doesn't yet return the same values as `wc`.
 | :x:    | implement core `wc` functionality              |
 | :x:    | completely implement each flag, with tests     |
 | :x:    | unit tests                                     |
+| :x:    | refactor such that main method is testable     |
 
 | Status | Feature               | Details                                                                                                              |
 |--------|-----------------------|----------------------------------------------------------------------------------------------------------------------|
