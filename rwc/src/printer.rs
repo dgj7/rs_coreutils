@@ -24,7 +24,7 @@ fn calc_width(count: usize) -> usize {
         return BASE_WIDTH
     }
 
-    return count.ilog10() as usize + BASE_WIDTH
+    count.ilog10() as usize + BASE_WIDTH
 }
 
 pub fn path_to_string(path_buf: &PathBuf) -> String {
