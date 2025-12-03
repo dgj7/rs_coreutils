@@ -14,7 +14,7 @@ pub fn validate_dashes(enforce_dash_count: bool, expected_dash_count: usize, das
     }
 
     /* handle if dash count zero */
-    if dashes.len() == 0 && expected_dash_count != 0 {
+    if dashes.is_empty() && expected_dash_count != 0 {
         panic!("{}: configuration error: this mode expects that supplied flags will have dashes", std::any::type_name::<Flag>());
     }
 
