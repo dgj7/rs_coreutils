@@ -1,7 +1,7 @@
 extern crate alloc;
 
-use std::process;
 use crate::cal::cal;
+use std::process;
 
 mod config;
 mod time;
@@ -19,7 +19,8 @@ fn main() {
                 println!("{}", error.message.clone().unwrap());
                 process::exit(error.code);
             } else {
-                panic!("rcal: Result Err, with no errors");
+                println!("rcal: Result Err, with no errors");
+                process::exit(999);
             }
         },
     };
