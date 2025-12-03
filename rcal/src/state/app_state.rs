@@ -16,6 +16,7 @@ impl ApplicationState {
     }
 }
 
+#[allow(clippy::unnecessary_unwrap)]
 fn determine_months(arguments: &Config, today: &dyn Today) -> Vec<Month> {
     /* create storage */
     let mut months = vec![];
