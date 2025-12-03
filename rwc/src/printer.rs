@@ -1,6 +1,6 @@
-use std::path::PathBuf;
 use crate::config::Config;
 use crate::counts::Counts;
+use std::path::Path;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const BASE_WIDTH: usize = 2;
@@ -27,8 +27,8 @@ fn calc_width(count: usize) -> usize {
     count.ilog10() as usize + BASE_WIDTH
 }
 
-pub fn path_to_string(path_buf: &PathBuf) -> String {
-    path_buf.clone().into_os_string().into_string().unwrap()
+pub fn path_to_string(path_buf: &Path) -> String {
+    path_buf.to_path_buf().into_os_string().into_string().unwrap()
 }
 
 pub fn print_version() {
