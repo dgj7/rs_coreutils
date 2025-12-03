@@ -81,7 +81,7 @@ impl Config {
     ///
     /// Public constructor to initialize from [Vector] of [String].
     ///
-    pub(crate) fn new(args: &Vec<String>) -> Config {
+    pub(crate) fn new(args: &[String]) -> Config {
         let mut config = Self::default();
 
         /* initial handling of arguments */

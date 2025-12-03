@@ -11,7 +11,7 @@ use common::input::known_error::KnownError;
 
 const BLANK_ROW: &str = "                     ";
 
-pub fn format_calendar(errors: &Vec<KnownError>, app_state: ApplicationState) -> Vec<String> {
+pub fn format_calendar(errors: &[KnownError], app_state: ApplicationState) -> Vec<String> {
     let mut lines = vec![];
     
     if errors.is_empty() {
