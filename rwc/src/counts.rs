@@ -82,18 +82,18 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
         }
 
         /* increment line count */
-        counts.lines = counts.lines + 1;
+        counts.lines += 1;
 
         /* loop over the characters in the line */
         let mut previous_was_whitespace = false;
         for (_char_index, character) in line.chars().enumerate() {
             /* increment char count */
-            counts.chars = counts.chars + 1;
+            counts.chars += 1;
 
             /* increment word count */
             if char::is_whitespace(character) {
                 if !previous_was_whitespace {
-                    counts.words = counts.words + 1;
+                    counts.words += 1;
                 }
                 previous_was_whitespace = true;
             } else {
@@ -106,6 +106,6 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
 
     /* the last line of the file, whatever it is, doesn't end in a newline */
     if counts.lines > 0 {
-        counts.lines = counts.lines - 1;
+        counts.lines -= 1;
     }
 }
