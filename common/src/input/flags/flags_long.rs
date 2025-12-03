@@ -16,7 +16,7 @@ impl LongFlags {
 
         for potential in potentials {
             /* strip/split dashes and name */
-            let (dashes, name) = read_dashes_and_name(&potential);
+            let (dashes, name) = read_dashes_and_name(potential);
 
             /* do some validation, if configured */
             validate_dashes(enforce_dash_count, DASH_COUNT, &dashes);

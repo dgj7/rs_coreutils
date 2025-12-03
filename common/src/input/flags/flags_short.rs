@@ -16,7 +16,7 @@ impl ShortFlags {
         let mut fd: Vec<Flag> = vec!();
 
         /* strip/split dashes and name */
-        let (dashes, name) = read_dashes_and_name(&flags);
+        let (dashes, name) = read_dashes_and_name(flags);
 
         /* do some validation, if configured */
         validate_dashes(enforce_dash_count, DASH_COUNT, &dashes);
