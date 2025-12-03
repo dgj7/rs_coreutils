@@ -18,7 +18,7 @@ impl TodayFactory {
                 Box::new(ActualToday {})
             },
             TodayFactory::Other { y, m } => {
-                Box::new(OtherToday { year: y.clone(), month: m.clone() })
+                Box::new(OtherToday { year: *y, month: *m })
             }
         }
     }
