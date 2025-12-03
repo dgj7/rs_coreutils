@@ -99,7 +99,7 @@ impl Config {
             let mut prev_arg_debug_highlighting = false;
             let mut prev_arg_first_week_has_at_least_days = false;
 
-            for (index, argument) in args.into_iter().enumerate() {
+            for (index, argument) in args.iter().enumerate() {
                 if index == 0 {
                     continue;
                 }
