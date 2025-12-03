@@ -28,7 +28,7 @@ pub(crate) fn count(config: &Config) -> Vec<Counts> {
     } else if config.show_help_exit {
         print_help();
     } else if config.should_count_bytes() || config.should_count_contents() {
-        perform_count_in_files(&config, &mut result);
+        perform_count_in_files(config, &mut result);
     } else {
         // actual wc program waits for input; ours will just throw an error and exit
         panic!("no valid command line arguments provided");
