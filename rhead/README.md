@@ -22,6 +22,7 @@ For more information, see `head --help`, `man head` or [man-pages](https://man7.
 | :x:                | _core_ `head` functionality implemented                                                                                                                                                                                                     |
 | :x:                | fix warnings (clippy)                                                                                                                                                                                                                       |
 | :x:                | full unit test suite                                                                                                                                                                                                                        |
+| :x:                | refactor such that main method is testable                                                                                                                                                                                                  |
 | :x:                | additional functionality: NUM may have a multiplier suffix: b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024, GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y. Binary prefixes can be used, too: KiB=K, MiB=M, and so on. |
 
 | Status | Parameter             | Detail                                                                                                                 |
