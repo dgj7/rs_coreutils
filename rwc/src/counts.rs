@@ -34,7 +34,7 @@ pub(crate) fn count(config: &Config) -> Vec<Counts> {
         panic!("no valid command line arguments provided");
     }
 
-    return result
+    result
 }
 
 fn perform_count_in_files(config: &Config, result: &mut Vec<Counts>) {

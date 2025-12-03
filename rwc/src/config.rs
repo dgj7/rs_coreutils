@@ -20,11 +20,11 @@ pub struct Config {
 
 impl Config {
     pub fn should_count_bytes(&self) -> bool {
-        return self.show_bytes;
+        self.show_bytes
     }
 
     pub fn should_count_contents(&self) -> bool {
-        return self.show_chars || self.show_lines || self.show_words || self.show_max_line;
+        self.show_chars || self.show_lines || self.show_words || self.show_max_line
     }
 
     pub fn new(args: Args) -> Config {
@@ -78,6 +78,6 @@ impl Config {
             }
         }
 
-        return config;
+        config
     }
 }
