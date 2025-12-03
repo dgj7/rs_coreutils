@@ -4,9 +4,9 @@ use crate::formatter;
 use crate::state::app_state::ApplicationState;
 use crate::time::today::TodayFactory;
 
-pub fn cal(args: Vec<String>) -> Result<Vec<String>, Vec<KnownError>> {
+pub fn cal(args: Vec<String>, today_factory: TodayFactory) -> Result<Vec<String>, Vec<KnownError>> {
     let config = Config::new(&args);
-    let today = TodayFactory::Actual.create();
+    let today = today_factory.create();
     let state = ApplicationState::new(&config, today.as_ref());
     let lines = formatter::format_calendar(&config.errors, state)
         .iter()
@@ -24,11 +24,12 @@ pub fn cal(args: Vec<String>) -> Result<Vec<String>, Vec<KnownError>> {
 #[cfg(test)]
 mod no_flag_happy_path_tests {
     use crate::cal::cal;
+    use crate::time::today::TodayFactory;
 
     #[test]
     fn no_args() {
         let args = vec!(String::from(""));
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Other { y: 0, m: 0 });
 
         assert_eq!(true, result.is_ok());
         let lines = result.unwrap();
@@ -46,7 +47,7 @@ mod no_flag_happy_path_tests {
             String::from("2012"),
         );
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_ok());
         let lines = result.unwrap();
@@ -100,7 +101,7 @@ mod no_flag_happy_path_tests {
             String::from("1985"),
         );
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_ok());
         let lines = result.unwrap();
@@ -122,12 +123,13 @@ mod no_flag_happy_path_tests {
 #[cfg(test)]
 mod flag_tests {
     use crate::cal::cal;
+    use crate::time::today::TodayFactory;
 
     #[test]
     fn test_year_and_before() {
         let args = "exe 1986 -B 3".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_ok());
         let lines = result.unwrap();
@@ -187,7 +189,7 @@ mod flag_tests {
     fn test_month_year_and_before() {
         let args = "exe feb 1987 -B 3".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_ok());
         let lines = result.unwrap();
@@ -216,7 +218,7 @@ mod flag_tests {
     fn test_year_month_and_after() {
         let args = "exe nov 1987 -A 4".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_ok());
         let lines = result.unwrap();
@@ -246,7 +248,7 @@ mod flag_tests {
     fn test_year_month_before_and_after() {
         let args = "exe jun 2002 -B 3 -A 4".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_ok());
         let lines = result.unwrap();
@@ -287,12 +289,13 @@ mod flag_tests {
 #[cfg(test)]
 mod error_tests {
     use crate::cal::cal;
+    use crate::time::today::TodayFactory;
 
     #[test]
     fn test_no_flags_month_only() {
         let args = "exe jan".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(false, result.is_ok());
         let lines = result.unwrap_err();
@@ -305,7 +308,7 @@ mod error_tests {
     fn no_flags_year_and_month() {
         let args = "exe 1985 mar".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_err());
         let lines: Vec<_> = result.unwrap_err().iter().map(|x| x.message.clone().unwrap()).collect();
@@ -319,7 +322,7 @@ mod error_tests {
     fn test_year_month_and_before() {
         let args = "exe 1987 feb -B 3".split_whitespace().map(|s| s.to_string()).collect::<Vec<String>>();
 
-        let result = cal(args);
+        let result = cal(args, TodayFactory::Actual);
 
         assert_eq!(true, result.is_err());
         let lines: Vec<_> = result.unwrap_err().iter().map(|x| x.message.clone().unwrap()).collect();
