@@ -86,7 +86,7 @@ fn perform_count_in_file(file: &File, counts: &mut Counts) {
 
         /* loop over the characters in the line */
         let mut previous_was_whitespace = false;
-        for (_char_index, character) in line.chars().enumerate() {
+        for character in line.chars() {
             /* increment char count */
             counts.chars += 1;
 
