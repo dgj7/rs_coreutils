@@ -10,6 +10,7 @@ Do not use this `rtouch` program in lieu of `touch` under any circumstances.  Th
 | :heavy_check_mark: | implement argument parsing, with `Config` struct |
 | :heavy_check_mark: | implement core `touch` functionality             |
 | :x:                | implement each flag; verify with tests           |
+| :x:                | refactor such that main method is testable       |
 | :x:                | unit tests                                       |
 
 | Status | Feature              | Details                                                                                                                          |
