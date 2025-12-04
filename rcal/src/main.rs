@@ -6,8 +6,8 @@ use crate::time::today::TodayFactory;
 
 mod time;
 mod state;
-mod formatter;
 mod cal;
+mod output;
 
 fn main() {
     let args = std::env::args();
