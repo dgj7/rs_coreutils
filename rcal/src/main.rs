@@ -16,13 +16,10 @@ fn main() {
     match result {
         Ok(lines) => lines.iter().for_each(|line| println!("{}", line)),
         Err(errors) => {
-            if let Some(error) = errors.first() {
-                println!("{}", error.message.clone().unwrap());
-                process::exit(error.code);
-            } else {
-                println!("rcal: Result Err, with no errors");
-                process::exit(999);
+            for error in errors {
+                println!("{}: {}", error.code, error.message.unwrap_or_else(|| String::from("unknown")));
             }
+            process::exit(999);
         },
     };
 }
