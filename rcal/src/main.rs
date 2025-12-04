@@ -4,7 +4,6 @@ use crate::cal::cal;
 use std::process;
 use crate::time::today::TodayFactory;
 
-mod config;
 mod time;
 mod state;
 mod formatter;

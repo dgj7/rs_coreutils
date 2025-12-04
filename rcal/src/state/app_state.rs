@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::state::config::Config;
 use crate::state::chunk::YearMode::{NoDisplay, OwnLine, WithMonth};
 use crate::state::chunk::{Chunk, YearMode};
 use crate::time::month::Month;
@@ -125,7 +125,7 @@ fn determine_year_display_mode(chunk: &[Month], years_displayed_on_own_line: &mu
 
 #[cfg(test)]
 mod static_date_tests {
-    use crate::config::Config;
+    use crate::state::config::Config;
     use crate::state::app_state::determine_months;
     use crate::time::month::Month;
     use crate::time::today::Today;

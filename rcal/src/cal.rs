@@ -1,5 +1,5 @@
 use common::input::known_error::KnownError;
-use crate::config::{Config};
+use crate::state::config::{Config};
 use crate::formatter;
 use crate::state::app_state::ApplicationState;
 use crate::time::today::TodayFactory;

@@ -245,7 +245,7 @@ impl Config {
 
 #[cfg(test)]
 mod test {
-    use crate::config::Config;
+    use crate::state::config::Config;
 
     #[test]
     fn test_all_args() {
