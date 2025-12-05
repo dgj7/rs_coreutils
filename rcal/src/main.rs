@@ -1,12 +1,11 @@
 extern crate alloc;
 
-use crate::cal::cal;
+use output::cal::cal;
 use std::process;
 use crate::time::today::TodayFactory;
 
 mod time;
 mod state;
-mod cal;
 mod output;
 
 fn main() {

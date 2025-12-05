@@ -23,7 +23,7 @@ pub fn cal(args: Vec<String>, today_factory: TodayFactory) -> Result<Vec<String>
 
 #[cfg(test)]
 mod no_flag_happy_path_tests {
-    use crate::cal::cal;
+    use crate::output::cal::cal;
     use crate::time::today::TodayFactory;
 
     #[test]
@@ -122,7 +122,7 @@ mod no_flag_happy_path_tests {
 
 #[cfg(test)]
 mod flag_tests {
-    use crate::cal::cal;
+    use crate::output::cal::cal;
     use crate::time::today::TodayFactory;
 
     #[test]
@@ -288,7 +288,7 @@ mod flag_tests {
 
 #[cfg(test)]
 mod error_tests {
-    use crate::cal::cal;
+    use crate::output::cal::cal;
     use crate::time::today::TodayFactory;
 
     #[test]
